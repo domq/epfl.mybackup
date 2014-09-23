@@ -1,4 +1,17 @@
 * Journal
+** <2014-09-23> Configured Netatalk + Samba in linux container
+Predrag has configured a simle Linux container ( fedora 20) with samba and netatalk runing:
++ The home directory is mounted directly in the container (/home) from a virtual machine over the NFSv3 
++ Home directory samba-user is used for samba and afp-user is used for afp
+  + Samba access : smb://samba-user@128.178.209.165
+  + Samba pwd: JGHRlVgXcdg
+  + AFP acces: afp://afp-user@128.178.209.165
+  + AFP pwd: predrag
+
+
+
+
+
 ** <2014-09-16 Tue> Sample Docker container
 
 Predrag set up Samba and BURP servers in a Docker container, ready to
