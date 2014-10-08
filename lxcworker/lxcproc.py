@@ -4,9 +4,11 @@ import sys
 import lxc
 import json
 import iptc
+import socket
 
 table=iptc.Table(iptc.Table.NAT)
 chain=iptc.Chain(table, "PREROUTING")
+hostname=socket.gethostname()
 
 def getContainerAsDict(container_name):
 	result={}
@@ -15,7 +17,7 @@ def getContainerAsDict(container_name):
 		result[container_name]={}
 		result[container_name]["name"]=container_name
 		result[container_name]["state"]=container.state
-		if not container.stopped:
+		if container.state!="STOPPED":
 			result[container_name]["MAC"]=container.network[0].hwaddr
 			result[container_name]["IPv4"]=container.get_ips(interface="eth0", timeout=30)[0]
 			ipforwards=getDestIPForwardAsDict(result[container_name]["IPv4"])
@@ -30,7 +32,8 @@ def getContainersAsJSON():
 	result=[]
 	for container_name in lxc.list_containers():
 		result.append(getContainerAsDict(container_name))
-	return json.dumps(result)
+	finalresult={"hostname":hostname,"hostIP":socket.gethostbyname(socket.gethostname()),"containers":result}
+	return json.dumps(finalresult)
 
 def getContainerIP(container_name):
 	if existsContainer(container_name):

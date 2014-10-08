@@ -21,7 +21,7 @@ if len(sys.argv) <2 :
 						"\tdeleteRulesForDestIP [ip]\n"+
 						"\tcloneAndStartContainer [source_name new_name]\n"+
 						"\tgetContainerIP [container_name]\n"+
-						"\tprintContainerAsJSON [container_name]\n"+
+						"\tprintContainersAsJSON\n"+
 						"\taddUserToContainer [username container_name]\n"+
 						"\tdeleteRedirectToContainer [containerName]")
 	exit()
