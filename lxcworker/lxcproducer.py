@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import pika
 import sys
+import json
 
 def callbackresponse(ch, method, properties, body):
 	body = body.decode('utf-8')
-	print(body)
+	print(json.dumps(json.loads(body),sort_keys=True,indent=4, separators=(',', ': ')))
 	connection.close()
 	exit()
 
