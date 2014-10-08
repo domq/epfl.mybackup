@@ -1,0 +1,11 @@
+*.o
+*.so
+*.pyc
+*.pyo
+*.bak
+
+/build
+/doc/_build
+/.project
+/MANIFEST
+/dist
