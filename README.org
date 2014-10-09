@@ -1,9 +1,38 @@
 * Journal
 
+** <week of 2014-09-29> Python automation scripts
+Predrag has added some python scripts for:
++ manipulation of iptables (DNAT routing from public IP to private  container IP)
++ clone and start the container
++ add users
+
+This is my first python code, so forgive my camel-case ..
+
+scripts:
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxcproc.py][lxcproc.py]] - contains all the procedures
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxctests.py][lxctests.py]] - contains the fronted to the procedures
+
+: [root@lxc]# ./lxctests.py 
+: please specify a command from :
+:         listRulesOnDPort [port]
+:        deleteRulesOnDPort [port]
+:        addRedirect [port sourceIP destinationIP]
+:       addRedirectToContainer [port sourceIP containerName]
+:        deleteRulesForSourceIP [ip]
+:       deleteRulesForDestIP [ip]
+:       cloneAndStartContainer [source_name new_name]
+:       getContainerIP [container_name]
+:       printContainers
+:       addUserToContainer [username container_name]
+:       listRealUsersInContainer [container_name]
+:       deleteRedirectToContainer [containerName]
+
+
 ** <week of 2014-09-22> Gaspar authentication
 Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. Don't forget
 : sudo yum install nss-pam-ldapd -y
 
+You shoud also edit the following files:
 
 + /etc/pam.d/netatalk
  : auth    required        pam_ldap.so     try_first_pass
