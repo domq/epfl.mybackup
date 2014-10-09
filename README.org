@@ -1,7 +1,7 @@
 * Journal
 
 ** <week of 2014-10-06> Cloudy ahead
-Added worker and producer scripts which allows to communicate with the servers containing the containers. only one command implemented..more to come !
+Added worker and producer scripts which allows to communicate with the servers containing the containers. Only one command implemented..more to come !
 
 Scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcworker.py][lxcworker.py]] - runs on server and waits for commands
@@ -28,7 +28,7 @@ In order to use the scripts you should install python-iptables from [[https://gi
 You need also:
 : yum install python3-lxc
 
-You should also install pika for python3.
+You should also install pika for python3. Don't remember from where I have got it, probably from [[https://github.com/renshawbay/pika-python3][here]].
 
 Scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcproc.py][lxcproc.py]] - contains all the procedures
