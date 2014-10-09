@@ -1,7 +1,9 @@
 * Journal
 
 ** <week of 2014-09-22> Gaspar authentication
-Predrag has configured pamldap netatalk + gaspar authentication:
+Predrag has configured pamldap netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm]this build for fc20]
+
+
 + /etc/pam.d/netatalk
  : auth    required        pam_ldap.so     try_first_pass
  : account required        pam_ldap.so     try_first_pass
@@ -37,7 +39,7 @@ Predrag has configured pamldap netatalk + gaspar authentication:
 
 
 ** <2014-09-23> Configured Netatalk + Samba in linux container
-Predrag has configured a simle Linux container ( fedora 20) with samba and netatalk runing:
+Predrag has configured a simple Linux container ( fedora 20) with samba and netatalk runing:
 + The home directory is mounted directly in the container (/home) from a virtual machine over the NFSv3 
 + Home directory samba-user is used for samba and afp-user is used for afp
   + Samba access : smb://samba-user@128.178.209.165
