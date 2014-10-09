@@ -1,11 +1,11 @@
 * Journal
 
 ** <week of 2014-09-22> Gaspar authentication
-Predrag configured pamldap netatalk + gaspar authentication
+Predrag configured pamldap netatalk + gaspar authentication:
 + /etc/pam.d/netatalk
-:auth    required        pam_ldap.so     try_first_pass
-:account required        pam_ldap.so     try_first_pass
-:session required        pam_permit.so
+: auth    required        pam_ldap.so     try_first_pass
+: account required        pam_ldap.so     try_first_pass
+: session required        pam_permit.so
 
 + /etc/afp.conf 
 : ;
