@@ -2,7 +2,7 @@
 
 ** <week of 2014-09-22> Gaspar authentication
 Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. Don't forget
-:sudo yum install nss-pam-ldapd -y
+: sudo yum install nss-pam-ldapd -y
 
 
 + /etc/pam.d/netatalk
