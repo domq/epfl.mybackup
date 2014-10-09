@@ -187,9 +187,9 @@ Predrag has configured a simple Linux container ( fedora 20) with samba and neta
 
 
 
-** <2014-09-16 Tue> Sample Docker container
+** <2014-09-16 Tue> Sample LXC container
 
-Predrag set up Samba and BURP servers in a Docker container, ready to
+Predrag set up Samba and BURP servers in a LXC container, ready to
 be copied cookie-cutter style.
 
 Samba access: 128.178.1.235, user samba-user, password predrag
