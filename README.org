@@ -118,6 +118,11 @@ Predrag has installed dnsmasq as the DNS resolver:
 	: bind-interfaces
 	: addn-hosts=/etc/host
 
++ /etc/resolv.dnsmasq.conf 
+	: search epfl.ch novalocal
+	: nameserver 128.178.15.7
+	: nameserver 128.178.15.8
+
 + /etc/hosts
 	: 128.178.209.165 quatrava.mybackup.epfl.ch
 	: 128.178.209.165 pviceic.mybackup.epfl.ch
