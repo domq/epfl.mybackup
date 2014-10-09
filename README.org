@@ -1,5 +1,16 @@
 * Journal
 
+** <week of 2014-10-06> Cloudy ahead
+Added worker and producer which allows to communicate with the servers containing the containers. only one command implemented..more to come !
+
+Scripts:
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxcworker.py][lxcworker.py]] - runs on server and waits for commands
+	+Launch with
+	: nohup python3 lxcworker.py&
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxcproducer.py][lxcproducer.py]] - allows to send the command to thje servers and wait for response
+	+ Launch with:
+	: python3 lxcproducer.py lxc.server.* getcontainers
+
 ** <week of 2014-09-29> Python automation scripts
 Predrag has added some python scripts for:
 + manipulation of iptables (DNAT routing from public IP to private  container IP)
@@ -8,7 +19,7 @@ Predrag has added some python scripts for:
 
 This is my first python code, so forgive my camel-case ..
 
-scripts:
+Scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcproc.py][lxcproc.py]] - contains all the procedures
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxctests.py][lxctests.py]] - contains the frontend to the procedures
 
@@ -82,7 +93,7 @@ Example:
 :    ],
 :    "hostIP": "10.0.0.92",
 :    "hostname": "lxc.novalocal"
-:}
+: }
 
 ** <week of 2014-09-22> Gaspar authentication
 Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. Don't forget
