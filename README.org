@@ -10,22 +10,22 @@ This is my first python code, so forgive my camel-case ..
 
 scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcproc.py][lxcproc.py]] - contains all the procedures
-+ [[https://github.com/domq/epfl.mybackup/blob/master/lxctests.py][lxctests.py]] - contains the fronted to the procedures
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxctests.py][lxctests.py]] - contains the frontend to the procedures
 
 : [root@lxc]# ./lxctests.py 
 : please specify a command from :
-:         listRulesOnDPort [port]
-:        deleteRulesOnDPort [port]
-:        addRedirect [port sourceIP destinationIP]
-:       addRedirectToContainer [port sourceIP containerName]
-:        deleteRulesForSourceIP [ip]
-:       deleteRulesForDestIP [ip]
-:       cloneAndStartContainer [source_name new_name]
-:       getContainerIP [container_name]
-:       printContainers
-:       addUserToContainer [username container_name]
-:       listRealUsersInContainer [container_name]
-:       deleteRedirectToContainer [containerName]
+:	listRulesOnDPort [port]
+:	deleteRulesOnDPort [port]
+:	addRedirect [port sourceIP destinationIP]
+:	addRedirectToContainer [port sourceIP containerName]
+:	deleteRulesForSourceIP [ip]
+:	deleteRulesForDestIP [ip]
+:	cloneAndStartContainer [source_name new_name]
+:	getContainerIP [container_name]
+:	printContainers
+:	addUserToContainer [username container_name]
+:	listRealUsersInContainer [container_name]
+:	deleteRedirectToContainer [containerName]
 
 
 ** <week of 2014-09-22> Gaspar authentication
