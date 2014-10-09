@@ -1,7 +1,7 @@
 * Journal
 
 ** <week of 2014-09-22> Gaspar authentication
-Predrag has configured pamldap netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm]this build for fc20]
+Predrag has configured pamldap netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm][this build for fc20]]
 
 
 + /etc/pam.d/netatalk
