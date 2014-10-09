@@ -106,6 +106,28 @@ Example:
 :    "hostIP": "10.0.0.92",
 :    "hostname": "lxc.novalocal"
 : }
+** <week of 2014-09-22> DNS (because it's all the effing DNS problem :))
+Predrag has installed dnsmasq as the DNS resolver:
+
++ /etc/dnsmasq-dns.conf
+	: port=53
+	: resolv-file=/etc/resolv.dnsmasq.conf
+	: interface=eth0
+	: no-dhcp-interface=eth0
+	: domain=mybackup.epfl.ch
+	: bind-interfaces
+	: addn-hosts=/etc/host
+
++ /etc/hosts
+	: 128.178.209.165 quatrava.mybackup.epfl.ch
+	: 128.178.209.165 pviceic.mybackup.epfl.ch
+
+: dnsmasq --conf-file=/etc/dnsmasq-dns.conf
+
+
+
+
+
 
 ** <week of 2014-09-22> Gaspar authentication
 Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. I have built this RPM with the instructions from [[http://netatalk.sourceforge.net/wiki/index.php/Netatalk_3.1.6_SRPMs_for_Fedora/RHEL/Scientific_Linux/CentOS][here]]. Don't forget to
