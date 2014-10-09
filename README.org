@@ -27,6 +27,62 @@ scripts:
 :    listRealUsersInContainer [container_name]
 :    deleteRedirectToContainer [containerName]
 
+Example:
+: [root@lxc]# ./lxctests.py listRulesOnDPort 548
+: DNAT from: 10.0.0.92/255.255.255.255:548 redirect to 192.168.58.38:548
+: 
+: [root@lxc lxcworker]# ./lxctests.py printContainers
+: {
+:    "containers": [
+:        {
+:            "centos-1": {
+:                "name": "centos-1",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "fedora-1": {
+:                "name": "fedora-1",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "mybackup-1": {
+:                "IPv4": "192.168.58.38",
+:                "IpForwards": [
+:                    {
+:                        "dest": "192.168.58.38",
+:                        "port": "548",
+:                        "source": "10.0.0.92"
+:                    }
+:                ],
+:                "MAC": "00:16:3e:9f:a3:09",
+:                "name": "mybackup-1",
+:                "state": "RUNNING"
+:            }
+:        },
+:        {
+:            "mybackup.golden.24_09_2014": {
+:                "name": "mybackup.golden.24_09_2014",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "titi": {
+:                "name": "titi",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "titi2": {
+:                "name": "titi2",
+:                "state": "STOPPED"
+:            }
+:        }
+:    ],
+:    "hostIP": "10.0.0.92",
+:    "hostname": "lxc.novalocal"
+:}
 
 ** <week of 2014-09-22> Gaspar authentication
 Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. Don't forget
