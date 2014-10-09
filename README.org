@@ -1,37 +1,38 @@
 * Journal
 
-** <week of 2014-09-22> Predrag configured pamldap netatalk + gaspar authentication
+** <week of 2014-09-22> Gaspar authentication
+Predrag configured pamldap netatalk + gaspar authentication
 + /etc/pam.d/netatalk
-#auth    required        pam_ldap.so     try_first_pass
-#account required        pam_ldap.so     try_first_pass
-#session required        pam_permit.so
+:auth    required        pam_ldap.so     try_first_pass
+:account required        pam_ldap.so     try_first_pass
+:session required        pam_permit.so
 
 + /etc/afp.conf 
-#;
-#; Netatalk 3.x configuration file
-#;
+:;
+:; Netatalk 3.x configuration file
+:;
 
-#[Global]
-#; Global server settings
-#admin auth user =  root
-#uam list = uams_dhx_pam.so uams_dhx2_pam.so
+:[Global]
+:; Global server settings
+:admin auth user =  root
+:uam list = uams_dhx_pam.so uams_dhx2_pam.so
 
-#; LDAP config
+:; LDAP config
 
-#ldap server = scoldap.epfl.ch
-#ldap auth method = none
-#ldap userbase = ou=users,o=epfl,c=ch
-#ldap userscope = one
-#ldap groupbase = ou=groups,o=epfl,c=ch
-#ldap groupscope = one
-#ldap uuid attr = uniqueIdentifier
-#ldap uuid string = xxxxxx
-#ldap name attr = uid
-#ldap group attr = cn
+:ldap server = scoldap.epfl.ch
+:ldap auth method = none
+:ldap userbase = ou=users,o=epfl,c=ch
+:ldap userscope = one
+:ldap groupbase = ou=groups,o=epfl,c=ch
+:ldap groupscope = one
+:ldap uuid attr = uniqueIdentifier
+:ldap uuid string = xxxxxx
+:ldap name attr = uid
+:ldap group attr = cn
 
-# [Homes]
-# basedir regex = /home
-# time machine = yes
+: [Homes]
+: basedir regex = /home
+: time machine = yes
 
 
 
