@@ -11,7 +11,7 @@ Predrag configured pamldap netatalk + gaspar authentication
 : ;
 : ; Netatalk 3.x configuration file
 : ;
-:
+: 
 : [Global]
 : ; Global server settings
 : admin auth user =  root
