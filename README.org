@@ -6,10 +6,10 @@ Added worker and producer scripts which allows to communicate with the servers c
 Scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcworker.py][lxcworker.py]] - runs on server and waits for commands
 	+ Launch with
-	: nohup python3 lxcworker.py&
+	 : nohup python3 lxcworker.py&
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcproducer.py][lxcproducer.py]] - allows to send the command to thje servers and wait for response
 	+ Launch with:
-	: python3 lxcproducer.py lxc.server.* getcontainers
+	 : python3 lxcproducer.py lxc.server.* getcontainers
 
 ** <week of 2014-09-29> Python automation scripts
 Predrag has added some python scripts for:
