@@ -1,11 +1,11 @@
 * Journal
 
 ** <week of 2014-10-06> Cloudy ahead
-Added worker and producer which allows to communicate with the servers containing the containers. only one command implemented..more to come !
+Added worker and producer scripts which allows to communicate with the servers containing the containers. only one command implemented..more to come !
 
 Scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcworker.py][lxcworker.py]] - runs on server and waits for commands
-	+Launch with
+	+ Launch with
 	: nohup python3 lxcworker.py&
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcproducer.py][lxcproducer.py]] - allows to send the command to thje servers and wait for response
 	+ Launch with:
