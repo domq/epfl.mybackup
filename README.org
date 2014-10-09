@@ -127,7 +127,7 @@ Predrag has installed dnsmasq as the DNS resolver:
 	: 128.178.209.165 quatrava.mybackup.epfl.ch
 	: 128.178.209.165 pviceic.mybackup.epfl.ch
 
-: dnsmasq --conf-file=/etc/dnsmasq-dns.conf
+: [root@dns]#  dnsmasq --conf-file=/etc/dnsmasq-dns.conf
 
 
 
