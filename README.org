@@ -108,7 +108,7 @@ Example:
 : }
 
 ** <week of 2014-09-22> Gaspar authentication
-Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. I have built this RPM with the instructions from [[http://netatalk.sourceforge.net/wiki/index.php/Netatalk_3.1.6_SRPMs_for_Fedora/RHEL/Scientific_Linux/CentOS][here]]. Don't forget
+Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. I have built this RPM with the instructions from [[http://netatalk.sourceforge.net/wiki/index.php/Netatalk_3.1.6_SRPMs_for_Fedora/RHEL/Scientific_Linux/CentOS][here]]. Don't forget to
 : sudo yum install nss-pam-ldapd -y
 
 You shoud also edit the following files:
