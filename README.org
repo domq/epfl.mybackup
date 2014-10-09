@@ -11,14 +11,14 @@ Predrag configured pamldap netatalk + gaspar authentication
 : ;
 : ; Netatalk 3.x configuration file
 : ;
-
+:
 : [Global]
 : ; Global server settings
 : admin auth user =  root
 : uam list = uams_dhx_pam.so uams_dhx2_pam.so
-
+:
 : ; LDAP config
-
+:
 : ldap server = scoldap.epfl.ch
 : ldap auth method = none
 : ldap userbase = ou=users,o=epfl,c=ch
@@ -29,7 +29,7 @@ Predrag configured pamldap netatalk + gaspar authentication
 : ldap uuid string = xxxxxx
 : ldap name attr = uid
 : ldap group attr = cn
-
+:
 : [Homes]
 : basedir regex = /home
 : time machine = yes
