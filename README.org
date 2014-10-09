@@ -19,6 +19,14 @@ Predrag has added some python scripts for:
 
 This is my first python code, so forgive my camel-case ..
 
+In order to use the scripts you should install python-iptables from [[https://github.com/domq/epfl.mybackup/blob/master/python-iptables-python3.zip?raw=true][here]]:
+: unzip  python-iptables-python3.zip
+: python3 setup.py build
+: python3 setup.py install
+
+You need also:
+: yum install python3-devel -y
+
 Scripts:
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxcproc.py][lxcproc.py]] - contains all the procedures
 + [[https://github.com/domq/epfl.mybackup/blob/master/lxctests.py][lxctests.py]] - contains the frontend to the procedures
