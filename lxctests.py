@@ -26,14 +26,14 @@ if len(sys.argv) <2 :
 						"\tdeleteRedirectToContainer [containerName]")
 	exit()
 else:
-	if sys.argv[1]=="listRulesOnPort":
+	if sys.argv[1]=="listRulesOnDPort":
 		if len(sys.argv)!=3:
 			print("specify a port : listRulesOnDPort [port]")
 			exit()
 		else:
 			lxcproc.printIptablesRulesOnDPort(sys.argv[2])
 
-	elif sys.argv[1]=="deleteRulesOnPort":
+	elif sys.argv[1]=="deleteRulesOnDPort":
 		if len(sys.argv)!=3:
 			print("specify a port : deleteRulesOnDPort [port]")
 			exit()
