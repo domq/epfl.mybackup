@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pika
 import sys
 import lxc
@@ -31,11 +31,11 @@ print(' [*] Waiting for commands. To exit press CTRL+C')
 def reply(command):
 	channel.basic_publish(exchange='lxc',
                       routing_key="lxc.master",
-                      body=command())
+                      body=lxcproc.jsonify(command()))
 
 def callbacklxc(ch, method, properties, body):
 	commands = {
-		"getcontainers" : lxcproc.getContainersAsJSON,
+		"getcontainers" : lxcproc.getContainers,
 	}
 	body = body.decode('utf-8')
 	print(" [x] %r:%r" % (method.routing_key, body,))
