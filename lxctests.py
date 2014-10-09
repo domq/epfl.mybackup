@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pika
 import sys
 import lxc
@@ -21,8 +21,9 @@ if len(sys.argv) <2 :
 						"\tdeleteRulesForDestIP [ip]\n"+
 						"\tcloneAndStartContainer [source_name new_name]\n"+
 						"\tgetContainerIP [container_name]\n"+
-						"\tprintContainerAsJSON [container_name]\n"+
+						"\tprintContainers\n"+
 						"\taddUserToContainer [username container_name]\n"+
+						"\tlistRealUsersInContainer [container_name]\n"+
 						"\tdeleteRedirectToContainer [containerName]")
 	exit()
 else:
@@ -33,7 +34,7 @@ else:
 		else:
 			lxcproc.printIptablesRulesOnDPort(sys.argv[2])
 
-	elif sys.argv[1]=="deleteRulesOnDPort":
+	elif sys.argv[1]=="deleteRulesOnPort":
 		if len(sys.argv)!=3:
 			print("specify a port : deleteRulesOnDPort [port]")
 			exit()
@@ -92,14 +93,22 @@ else:
 			exit()
 	elif sys.argv[1]=="addUserToContainer":
 		if len(sys.argv)!=4:
-			print("specify a username andcontainer name : addUserToContainer [username container_name]")
+			print("specify a username and container name : addUserToContainer [username container_name]")
 			exit()
 		else:
 			lxcproc.addUserToContainer(sys.argv[2], sys.argv[3])
 			exit()
+	elif sys.argv[1]=="listRealUsersInContainer":
+		if len(sys.argv)!=3:
+			print("specify a container name : listRealUsersInContainer [container_name]")
+			exit()
+		else:
+			print(lxcproc.prettyjsonify(lxcproc.getRealUsersInContainer(sys.argv[2])))
+			exit()
 
-	elif sys.argv[1]=="printContainersAsJSON":
-		print(lxcproc.getContainersAsJSON())
+
+	elif sys.argv[1]=="printContainers":
+		print(lxcproc.prettyjsonify(lxcproc.getContainers()))
 		exit()
 
 

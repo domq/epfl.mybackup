@@ -4,33 +4,37 @@ import sys
 import lxc
 import json
 import iptc
+import socket
 
 table=iptc.Table(iptc.Table.NAT)
 chain=iptc.Chain(table, "PREROUTING")
+HOSTNAME=socket.gethostname()
+CONTAINER_PATH = "/var/lib/lxc/"
 
-def getContainerAsDict(container_name):
+def getContainer(container_name):
 	result={}
 	container = lxc.Container(container_name)
 	if container.defined :
 		result[container_name]={}
 		result[container_name]["name"]=container_name
 		result[container_name]["state"]=container.state
-		if not container.stopped:
+		if container.state!="STOPPED":
 			result[container_name]["MAC"]=container.network[0].hwaddr
 			result[container_name]["IPv4"]=container.get_ips(interface="eth0", timeout=30)[0]
-			ipforwards=getDestIPForwardAsDict(result[container_name]["IPv4"])
+			ipforwards=getDestIPForward(result[container_name]["IPv4"])
 			if ipforwards :
-				result[container_name]["IpForwards"]=getDestIPForwardAsDict(result[container_name]["IPv4"])
+				result[container_name]["IpForwards"]=getDestIPForward(result[container_name]["IPv4"])
 		return result
 	else:
 		print("the container is not defined!")
 		exit()
 
-def getContainersAsJSON():
+def getContainers():
 	result=[]
 	for container_name in lxc.list_containers():
-		result.append(getContainerAsDict(container_name))
-	return json.dumps(result)
+		result.append(getContainer(container_name))
+	finalresult={"hostname":HOSTNAME,"hostIP":socket.gethostbyname(socket.gethostname()),"containers":result}
+	return finalresult
 
 def getContainerIP(container_name):
 	if existsContainer(container_name):
@@ -81,14 +85,14 @@ def matchIptablesRulesOnDPort(dport):
 				rules.append(rule)
 	return rules
 	
-def getDestIPForwardAsDict(dest_ip):
+def getDestIPForward(dest_ip):
 	rules=matchIptablesRulesOnDestIp(dest_ip)
 	results=[]
 	for rule in rules:
 		result={}
 		result["dest"]=dest_ip
 		result["port"]=rule.matches[0].dport
-		result["source"]=rule.dst
+		result["source"]=rule.dst.split("/", 1 )[0];
 		results.append(result)
 	return results
 	
@@ -190,3 +194,43 @@ def addUserToContainer(username, container_name):
 	else : 
 		print("container "+container_name+" is not running!")
 		return result
+
+def getUsersInContainer(container_name):
+	container=lxc.Container(container_name)
+	if not container.defined : return (False,"The container "+container_name+" doesn't exist")
+	etcpasswd=open(CONTAINER_PATH+container_name+"/rootfs/etc/passwd","r")
+	usernames=[]
+	for line in etcpasswd.readlines():
+		username={}
+		splittedline=line.split(":")
+		username["username"]=splittedline[0]
+		username["pid"]=splittedline[2]
+		username["gid"]=splittedline[3]
+		username["description"]=splittedline[4]
+		username["home"]=splittedline[5]
+		username["shell"]=splittedline[6].rstrip('\n')
+		usernames.append(username)
+	return usernames
+
+def prettyjsonify(structure):
+	return json.dumps(structure,sort_keys=True,indent=4, separators=(',', ': '))
+
+def jsonify(structure):
+	return json.dumps(structure)
+
+
+def getRealUsersInContainer(container_name):
+	users=getUsersInContainer(container_name)
+	resultusers=[]
+	for user in users:
+		if user["home"].startswith("/home/"):
+			resultusers.append(user)
+	return resultusers
+
+
+
+
+
+
+
+
