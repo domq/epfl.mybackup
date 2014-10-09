@@ -3,33 +3,33 @@ import pika
 import sys
 import lxc
 import json
+import socket
 import lxcproc
+
+#lxcworker.py
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(
         host='10.0.0.103'))
 channel = connection.channel()
 
-channel.exchange_declare(exchange='topic_lxc_workers',
+channel.exchange_declare(exchange='lxc',
                          type='topic')
 
 result = channel.queue_declare(exclusive=True)
 queue_name = result.method.queue
 
 
-binding_keys = ['lxc.server.*','lxc.server']
+binding_keys = ['lxc.server.*','lxc.server', 'lxc.server.'+socket.gethostname(), 'lxc.server.'+socket.gethostbyname(socket.gethostname())]
 
 for binding_key in binding_keys:
-    channel.queue_bind(exchange='topic_lxc_workers',
+    channel.queue_bind(exchange='lxc',
                        queue=queue_name,
                        routing_key=binding_key)
 
 print(' [*] Waiting for commands. To exit press CTRL+C')
 
 def reply(command):
-	channel.exchange_declare(exchange='topic_lxc_master',
-                         type='topic')
-
-	channel.basic_publish(exchange='topic_lxc_master',
+	channel.basic_publish(exchange='lxc',
                       routing_key="lxc.master",
                       body=command())
 
