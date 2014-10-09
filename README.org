@@ -116,7 +116,7 @@ Predrag has installed dnsmasq as the DNS resolver:
 	: no-dhcp-interface=eth0
 	: domain=mybackup.epfl.ch
 	: bind-interfaces
-	: addn-hosts=/etc/host
+	: addn-hosts=/etc/hosts
 
 + /etc/resolv.dnsmasq.conf 
 	: search epfl.ch novalocal
