@@ -1,0 +1,351 @@
+* Journal
+
+** <2014-10-10> Gasparized samba
+
+
+Clone the container, start it and link the public ip samba ports to the container ip samba ports
+: [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2
+: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackub-2 udp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 udp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 udp
+: [root@lxc]# lxc-attach -n mybackup-2
+: [root@mybackup /]#
+
++ /etc/samba/smb.conf (add or modify)
+ : security = user
+ : #passdb backend = tdbsam
+ : passdb backend = ldapsam:ldap://scoldap.epfl.ch
+ : ldap suffix = o=epfl,c=ch
+ : ldap admin dn = cn=samba-mybackup,ou=services,o=epfl,c=ch
+ : ldap ssl = no
+
+
+Add the ldap password to samba:
+: [root@mybackup]# smbpasswd -w <password>
+: Setting stored password for "cn=samba-mybackup,ou=services,o=epfl,c=ch" in secrets.tdb
+
+
+: [root@mybackup]# systemctl restart smb nmb
+: oct. 10 09:55:45 mybackup-2 systemd[1]: Starting Samba SMB Daemon...
+: oct. 10 09:55:45 mybackup-2 systemd[1]: smb.service: Supervising process 720 which is not our child. We'll most likely not notice when it exits.
+: oct. 10 09:55:45 mybackup-2 smbd[720]: [2014/10/10 09:55:45.274373,  0] ../source3/passdb/pdb_ldap.c:6529(pdb_ldapsam_init_common)
+: oct. 10 09:55:45 mybackup-2 smbd[720]: pdb_init_ldapsam: WARNING: Could not get domain info, nor add one to the domain. We cannot work reliably without it.
+: oct. 10 09:55:45 mybackup-2 smbd[720]: [2014/10/10 09:55:45.274525,  0] ../source3/passdb/pdb_interface.c:178(make_pdb_method_name)
+: oct. 10 09:55:45 mybackup-2 smbd[720]: pdb backend ldapsam:ldap://scoldap.epfl.ch did not correctly init (error was NT_STATUS_CANT_ACCESS_DOMAIN_INFO)
+: oct. 10 09:55:45 mybackup-2 systemd[1]: smb.service: main process exited, code=exited, status=1/FAILURE
+: oct. 10 09:55:45 mybackup-2 systemd[1]: Failed to start Samba SMB Daemon.
+: oct. 10 09:55:45 mybackup-2 systemd[1]: Unit smb.service entered failed state.
+
+It's a fail. Apparently, Samba cannot hook to the traditional LDAP authentication mecanism and needs an LDAP with the samba schema:
++ [[https://wiki.samba.org/index.php/Samba,_Active_Directory_%26_LDAP][wiki.samba.org]]
++ [[https://help.ubuntu.com/10.04/serverguide/samba-ldap.html][Ubuntu on creating samba ldap schema]]
+
+I should talk to Claude..
+
+
+
+** <week of 2014-10-06> Cloudy ahead
+Added worker and producer scripts which allows to communicate with the servers containing the containers. Only one command implemented..more to come !
+
+Scripts:
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxcworker.py][lxcworker.py]] - runs on server and waits for commands
+	+ Launch with
+	 : nohup python3 lxcworker.py &
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxcproducer.py][lxcproducer.py]] - allows to send the command to thje servers and wait for response
+	+ Launch with:
+	 : python3 lxcproducer.py lxc.server.* getcontainers
+
+** <week of 2014-09-29> Python automation scripts
+Predrag has added some python scripts for:
++ manipulation of iptables (DNAT routing from public IP to private  container IP)
++ clone and start the container
++ add users
++ etc..
+
+This is my first python code, so forgive my camel-case ..
+
+In order to use the scripts you should install python3-iptables from [[https://github.com/ldx/python-iptables/tree/python3][here]]:
+: yum install python3-devel -y
+: unzip  python3.zip
+: cd python-iptables-python3
+: python3 setup.py build
+: python3 setup.py install
+
+You need also:
+: yum install python3-lxc
+
+You should also install pika for python3. Don't remember from where I have got it, probably from [[https://github.com/renshawbay/pika-python3][here]].
+
+Scripts:
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxcproc.py][lxcproc.py]] - contains all the procedures
++ [[https://github.com/domq/epfl.mybackup/blob/master/lxctests.py][lxctests.py]] - contains the frontend to the procedures
+
+: [root@lxc]# ./lxctests.py 
+: please specify a command from :
+:    listRulesOnDPort [port]
+:    deleteRulesOnDPort [port]
+:    addRedirect [port sourceIP destinationIP]
+:    addRedirectToContainer [port sourceIP containerName]
+:    deleteRulesForSourceIP [ip]
+:    deleteRulesForDestIP [ip]
+:    cloneAndStartContainer [source_name new_name]
+:    getContainerIP [container_name]
+:    printContainers
+:    addUserToContainer [username container_name]
+:    listRealUsersInContainer [container_name]
+:    deleteRedirectToContainer [containerName]
+
+Example:
+: [root@lxc]# ./lxctests.py listRulesOnDPort 548
+: DNAT from: 10.0.0.92/255.255.255.255:548 redirect to 192.168.58.38:548
+: 
+: [root@lxc lxcworker]# ./lxctests.py printContainers
+: {
+:    "containers": [
+:        {
+:            "centos-1": {
+:                "name": "centos-1",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "fedora-1": {
+:                "name": "fedora-1",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "mybackup-1": {
+:                "IPv4": "192.168.58.38",
+:                "IpForwards": [
+:                    {
+:                        "dest": "192.168.58.38",
+:                        "port": "548",
+:                        "source": "10.0.0.92"
+:                    }
+:                ],
+:                "MAC": "00:16:3e:9f:a3:09",
+:                "name": "mybackup-1",
+:                "state": "RUNNING"
+:            }
+:        },
+:        {
+:            "mybackup.golden.24_09_2014": {
+:                "name": "mybackup.golden.24_09_2014",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "titi": {
+:                "name": "titi",
+:                "state": "STOPPED"
+:            }
+:        },
+:        {
+:            "titi2": {
+:                "name": "titi2",
+:                "state": "STOPPED"
+:            }
+:        }
+:    ],
+:    "hostIP": "10.0.0.92",
+:    "hostname": "lxc.novalocal"
+: }
+** <week of 2014-09-22> DNS (because it's all the effing DNS problem :))
+Predrag has installed dnsmasq as the DNS resolver:
+
++ /etc/dnsmasq-dns.conf
+	: port=53
+	: resolv-file=/etc/resolv.dnsmasq.conf
+	: interface=eth0
+	: no-dhcp-interface=eth0
+	: domain=mybackup.epfl.ch
+	: bind-interfaces
+	: addn-hosts=/etc/hosts
+
++ /etc/resolv.dnsmasq.conf 
+	: search epfl.ch novalocal
+	: nameserver 128.178.15.7
+	: nameserver 128.178.15.8
+
++ /etc/hosts
+	: 128.178.209.165 quatrava.mybackup.epfl.ch
+	: 128.178.209.165 pviceic.mybackup.epfl.ch
+
+: [root@dns]#  dnsmasq --conf-file=/etc/dnsmasq-dns.conf
+
+
+
+
+
+
+** <week of 2014-09-22> Gaspar authentication
+Predrag has configured pam_ldap for netatalk + gaspar authentication. It works with [[https://github.com/domq/epfl.mybackup/blob/master/netatalk-3.1.6-0.0.1.fc20.x86_64.rpm?raw=true][this build for fc20]]. I have built this RPM with the instructions from [[http://netatalk.sourceforge.net/wiki/index.php/Netatalk_3.1.6_SRPMs_for_Fedora/RHEL/Scientific_Linux/CentOS][here]]. Don't forget to
+: sudo yum install nss-pam-ldapd -y
+
+You shoud also edit the following files:
+
++ /etc/nsswitch.conf - add or modify the following lines
+ : passwd:     files ldap
+ : shadow:     files ldap
+ : group:      files ldap
+
+
++ /etc/pam.d/netatalk
+ : auth    required        pam_ldap.so     try_first_pass
+ : account required        pam_ldap.so     try_first_pass
+ : session required        pam_permit.so
+
++ /etc/afp.conf 
+ : ;
+ : ; Netatalk 3.x configuration file
+ : ;
+ : 
+ : [Global]
+ : ; Global server settings
+ : admin auth user =  root
+ : uam list = uams_dhx_pam.so uams_dhx2_pam.so
+ : 
+ : ; LDAP config
+ : 
+ : ldap server = scoldap.epfl.ch
+ : ldap auth method = none
+ : ldap userbase = ou=users,o=epfl,c=ch
+ : ldap userscope = one
+ : ldap groupbase = ou=groups,o=epfl,c=ch
+ : ldap groupscope = one
+ : ldap uuid attr = uniqueIdentifier
+ : ldap uuid string = xxxxxx
+ : ldap name attr = uid
+ : ldap group attr = cn
+ : 
+ : [Homes]
+ : basedir regex = /home
+ : time machine = yes
+
+
+
+** <2014-09-23> Configured Netatalk + Samba in linux container
+Predrag has configured a simple Linux container ( fedora 20) with samba and netatalk runing:
++ The home directory is mounted directly in the container (/home) from a virtual machine over the NFSv3 
++ Home directory samba-user is used for samba and afp-user is used for afp
+  + Samba access : smb://samba-user@128.178.209.165
+  + Samba pwd: JGHRlVgXcdg
+  + AFP acces: afp://afp-user@128.178.209.165
+  + AFP pwd: predrag
+
+
+
+
+
+** <2014-09-16 Tue> Sample LXC container
+
+Predrag set up Samba and BURP servers in a LXC container, ready to
+be copied cookie-cutter style.
+
+Samba access: 128.178.1.235, user samba-user, password predrag
+BURP access: 128.178.1.235, user dominique, password abcdefgh
+
+** <2014-09-17 Wed> Backing up from a Mac
+
+Dominique configured his Mac (OSX 10.9.4, French) to back up to the
+sample Docker container. Reference documentation: [[http://www.insanelymac.com/forum/topic/184462-guide-106-snow-leopard-time-machine-backup-to-network-share/][on InsanelyMac]], [[http://lifehacker.com/5691649/an-easier-way-to-set-up-time-machine-to-back-up-to-a-networked-windows-computer][on
+LifeHacker]] (since getting the script is a pain on both, I attached it
+below)
+
++ Need to create a "sparse bundle" first: 
+  : NAME=`scutil --get ComputerName`;
+  : hdiutil create -size ${SIZE}G -fs HFS+J -type SPARSEBUNDLE -volname 'Time Machine Backups' "${NAME}.sparsebundle"
+  + This only succeeds on the local disk; doing that directly on the Samba share fails with "operation not supported" (and hdutil deletes the directory it created before exiting).
+  + Setting up the UUID in a plist file as per the script seems to have no effect whatsoever (doesn't change the fact that sudo tmutil setdestination is required, see below)
++ Then, copy the sparse bundle to Samba:
+  : mv "$NAME".sparsebundle /Volumes/samba-user/
++ Setting TMShowUnsupportedNetworkVolumes as per the LifeHacker article, [[http://forum.synology.com/enu/viewtopic.php?f%3D229&t%3D71049][seems to no longer have any effect]]. What [[https://apple.stackexchange.com/questions/107032/time-machine-backup-to-an-smb-share-mavericks][does work]] is to mount the newly created sparsebundle (double-click it in the Finder), then:
+  : sudo tmutil setdestination /Volumes/Time\ Machine\ Backups/
++ Once this is done, Time Machine remembers all it needs to know and is smart enough to mount the SMB share, then the sparsebundle, upon attempting to start a backup. (You can even see the spinning arrows next to the mounted sparsebundle in the Finder).
+
+Notes for later:
++ Despite Predrag's fear on the topic it looks like [[https://www.google.ch/search?q%3Dnetatalk%2B"time%2Bmachine%2B%3D%2Byes"][netatalk does support Time Machine]]. We should give that a try.
+
+*** Script as downloaded from InsanelyMac (registration required)
+#+BEGIN_SRC sh
+#!/bin/bash
+# A bash script to create a time machine disk image suitable for
+# backups with OS X 10.6 (Snow Leopard)
+# This script probably only works for me, so try it at your own peril!
+# Use, distribute, and modify as you see fit but leave this header intact.
+# (R) sunkid - September 5, 2009
+
+usage ()
+{
+     echo ${errmsg}"\n"
+     echo "makeImage.sh"
+     echo "	usage: makeImage.sh size [directory]"
+     echo "	Create a disk image with a max storage size of <size> and copy it"
+     echo "	to your backup volume (if specified)"
+}
+
+# test if we have two arguments on the command line
+if [ $# -lt 1 ]
+then
+    usage
+    exit
+fi
+
+# see if there are two arguments and we can write to the directory
+if [ $# == 2 ]
+then
+	if [ ! -d $2 ]
+	then
+ 		errmsg=${2}": No such directory"
+    	usage
+    	exit
+	fi
+	if [ ! -w $2 ]
+	then
+		errmsg="Cannot write to "${2}
+		usage
+    	exit
+	fi
+fi
+
+SIZE=$1
+DIR=$2
+NAME=`scutil --get ComputerName`;
+UUID=`system_profiler | grep 'Hardware UUID' | awk '{print $3}'`
+
+# get busy
+echo -n "Generating disk image ${NAME}.sparsebundle with size ${SIZE}GB ... "
+hdiutil create -size ${SIZE}G -fs HFS+J -type SPARSEBUNDLE \
+	-volname 'Time Machine Backups' "${NAME}.sparsebundle" >> /dev/null 2>&1
+
+echo "done!"
+
+echo -n "Generating property list file with uuid $UUID ... "
+
+PLIST=$(cat <<EOFPLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>com.apple.backupd.HostUUID</key>
+        <string>$UUID</string>
+</dict>
+</plist>
+EOFPLIST)
+
+echo $PLIST > "${NAME}.sparsebundle"/com.apple.TimeMachine.MachineID.plist
+echo "done!"
+
+if [ $# == 2 ]
+then
+	echo -n "Copying ${NAME}.sparsebundle to $DIR ... "
+	cp -pfr "${NAME}.sparsebundle" $DIR/"${NAME}.sparsebundle"
+	echo "done"
+fi
+
+echo "Finished! Happy backups!"
+#+END_SRC
