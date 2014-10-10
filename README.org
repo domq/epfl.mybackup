@@ -39,9 +39,11 @@ Add the ldap password to samba:
 : oct. 10 09:55:45 mybackup-2 systemd[1]: Failed to start Samba SMB Daemon.
 : oct. 10 09:55:45 mybackup-2 systemd[1]: Unit smb.service entered failed state.
 
-It's a fail. Apparently, Samba cannot hook to the traditional LDAP authentication mecanism and neets an LDAP with the samba schema:
+It's a fail. Apparently, Samba cannot hook to the traditional LDAP authentication mecanism and needs an LDAP with the samba schema:
 + [[https://wiki.samba.org/index.php/Samba,_Active_Directory_%26_LDAP][wiki.samba.org]]
 + [[https://help.ubuntu.com/10.04/serverguide/samba-ldap.html][Ubuntu on creating samba ldap schema]]
+
+I should talk to Claude..
 
 
 
