@@ -3,7 +3,7 @@
 ** <2014-10-10> Gasparized samba
 
 
-Clone the container and start it
+Clone the container, start it and link the public ip samba ports to the container ip samba ports
 : [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2
 : [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackup-2 tcp
 : [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackub-2 udp
