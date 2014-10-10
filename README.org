@@ -1,7 +1,17 @@
 * Journal
 
-** <2014-10-10> Gasparized samba
+** <2014-10-10> Built python-augeas for python3
+We need this in order to manipulate /etc/hosts file and other..
 
+: wget https://github.com/hercules-team/python-augeas/archive/master.zip
+: python3 setup.py build
+: python3 setup.py install
+: yum install augeas-libs
+
+
+
+
+** <2014-10-10> Gasparized samba
 
 Clone the container, start it and link the public ip samba ports to the container ip samba ports
 : [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2

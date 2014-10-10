@@ -24,6 +24,7 @@ if len(sys.argv) <2 :
 						"\tprintContainers\n"+
 						"\taddUserToContainer [username container_name]\n"+
 						"\tlistRealUsersInContainer [container_name]\n"+
+						"\tlistDNS\n"+
 						"\tdeleteRedirectToContainer [containerName]")
 	exit()
 else:
@@ -105,6 +106,9 @@ else:
 		else:
 			print(lxcproc.prettyjsonify(lxcproc.getRealUsersInContainer(sys.argv[2])))
 			exit()
+	elif sys.argv[1]=="listDNS":
+		print(lxcproc.prettyjsonify(lxcproc.getDNS()))
+
 
 
 	elif sys.argv[1]=="printContainers":
