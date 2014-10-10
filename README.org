@@ -2,6 +2,18 @@
 
 ** <2014-10-10> Gasparized samba
 
+
+Clone the container and start it
+: [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2
+: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackub-2 udp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 udp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 udp
+: [root@lxc]# lxc-attach -n mybackup-2
+: [root@mybackup /]#
+
 + /etc/samba/smb.conf (add or modify)
  : security = user
  : #passdb backend = tdbsam
@@ -16,15 +28,7 @@ Add the ldap password to samba:
 : Setting stored password for "cn=samba-mybackup,ou=services,o=epfl,c=ch" in secrets.tdb
 
 
-: [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2
-: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackup-2 tcp
-: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackub-2 udp
-: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 tcp
-: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 udp
-: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 tcp
-: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 udp
-: [root@lxc]# lxc-attach -n mybackup-2
-: [root@lxc]# systemctl restart smb nmb
+: [root@mybackup]# systemctl restart smb nmb
 : oct. 10 09:55:45 mybackup-2 systemd[1]: Starting Samba SMB Daemon...
 : oct. 10 09:55:45 mybackup-2 systemd[1]: smb.service: Supervising process 720 which is not our child. We'll most likely not notice when it exits.
 : oct. 10 09:55:45 mybackup-2 smbd[720]: [2014/10/10 09:55:45.274373,  0] ../source3/passdb/pdb_ldap.c:6529(pdb_ldapsam_init_common)
