@@ -1,5 +1,46 @@
 * Journal
 
+** <2014-10-10> Gasparized samba
+
++ /etc/samba/smb.conf (add or modify)
+ : security = user
+ : #passdb backend = tdbsam
+ : passdb backend = ldapsam:ldap://scoldap.epfl.ch
+ : ldap suffix = o=epfl,c=ch
+ : ldap admin dn = cn=samba-mybackup,ou=services,o=epfl,c=ch
+ : ldap ssl = no
+
+
+Add the ldap password to samba:
+: [root@mybackup]# smbpasswd -w <password>
+: Setting stored password for "cn=samba-mybackup,ou=services,o=epfl,c=ch" in secrets.tdb
+
+
+: [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2
+: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 137 10.0.0.92 mybackub-2 udp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 138 10.0.0.92 mybackup-2 udp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 tcp
+: [root@lxc]# ./lxctests.py addRedirectToContainer 139 10.0.0.92 mybackup-2 udp
+: [root@lxc]# lxc-attach -n mybackup-2
+: [root@lxc]# systemctl restart smb nmb
+: oct. 10 09:55:45 mybackup-2 systemd[1]: Starting Samba SMB Daemon...
+: oct. 10 09:55:45 mybackup-2 systemd[1]: smb.service: Supervising process 720 which is not our child. We'll most likely not notice when it exits.
+: oct. 10 09:55:45 mybackup-2 smbd[720]: [2014/10/10 09:55:45.274373,  0] ../source3/passdb/pdb_ldap.c:6529(pdb_ldapsam_init_common)
+: oct. 10 09:55:45 mybackup-2 smbd[720]: pdb_init_ldapsam: WARNING: Could not get domain info, nor add one to the domain. We cannot work reliably without it.
+: oct. 10 09:55:45 mybackup-2 smbd[720]: [2014/10/10 09:55:45.274525,  0] ../source3/passdb/pdb_interface.c:178(make_pdb_method_name)
+: oct. 10 09:55:45 mybackup-2 smbd[720]: pdb backend ldapsam:ldap://scoldap.epfl.ch did not correctly init (error was NT_STATUS_CANT_ACCESS_DOMAIN_INFO)
+: oct. 10 09:55:45 mybackup-2 systemd[1]: smb.service: main process exited, code=exited, status=1/FAILURE
+: oct. 10 09:55:45 mybackup-2 systemd[1]: Failed to start Samba SMB Daemon.
+: oct. 10 09:55:45 mybackup-2 systemd[1]: Unit smb.service entered failed state.
+
+It's a fail. Apparently, Samba cannot hook to the traditional LDAP authentication mecanism and neets an LDAP with the samba schema:
++ [[https://wiki.samba.org/index.php/Samba,_Active_Directory_%26_LDAP][wiki.samba.org]]
++ [[https://help.ubuntu.com/10.04/serverguide/samba-ldap.html][Ubuntu on creating samba ldap schema]]
+
+
+
 ** <week of 2014-10-06> Cloudy ahead
 Added worker and producer scripts which allows to communicate with the servers containing the containers. Only one command implemented..more to come !
 
