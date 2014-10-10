@@ -141,6 +141,12 @@ Predrag has configured pam_ldap for netatalk + gaspar authentication. It works w
 
 You shoud also edit the following files:
 
++ /etc/nsswitch.conf - add or modify the following lines
+ : passwd:     files ldap
+ : shadow:     files ldap
+ : group:      files ldap
+
+
 + /etc/pam.d/netatalk
  : auth    required        pam_ldap.so     try_first_pass
  : account required        pam_ldap.so     try_first_pass
