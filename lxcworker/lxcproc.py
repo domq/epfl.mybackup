@@ -62,7 +62,7 @@ def cloneAndStartContainer(source_name, new_name):
 	elif existsContainer(new_name):
 		print("container "+new_name+" exists already !")
 		exit()
-	elif not isStoppedContainer(source_name):
+	elif lxc.Container(source_name).running:
 		print("the container "+source_name+" is running, stop it first (lxc-stop -n"+source_name+")")
 		exit()
 	else:
