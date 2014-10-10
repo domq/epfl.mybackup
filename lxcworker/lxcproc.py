@@ -39,7 +39,7 @@ def getContainers():
 def getContainerIP(container_name):
 	if existsContainer(container_name):
 		container=lxc.Container(container_name)
-		if not container.stopped:
+		if container.running:
 			ipaddress=container.get_ips(interface="eth0", timeout=0.5)
 			return ipaddress[0]
 		else:
@@ -51,10 +51,6 @@ def getContainerIP(container_name):
 def existsContainer(container_name):
 	container=lxc.Container(container_name)
 	return container.defined
-
-def isStoppedContainer(source_name):
-	container=lxc.Container(source_name)
-	return container.stopped
 
 		
 	
@@ -93,6 +89,7 @@ def getDestIPForward(dest_ip):
 		result["dest"]=dest_ip
 		result["port"]=rule.matches[0].dport
 		result["source"]=rule.dst.split("/", 1 )[0];
+		result["protocol"]=rule.protocol
 		results.append(result)
 	return results
 	
@@ -158,30 +155,30 @@ def deleteIptablesRulesForContainer(container_name):
 	
 
 	
-def addRedirectOfDPort(port,sourceIP,destinationIP):
-	if not existsRedirectForIpAndPort(port,sourceIP):
+def addRedirectOfDPort(port,sourceIP,destinationIP,protocol):
+	if not existsRedirectForIpPortAndProtocol(port,sourceIP,protocol):
 		rule = iptc.Rule()
 		rule.dst=sourceIP
-		rule.protocol="tcp"
+		rule.protocol=protocol
 		target=rule.create_target("DNAT")
 		target.to_destination=destinationIP+":"+port
-		match = rule.create_match("tcp")
+		match = rule.create_match(protocol)
 		match.dport=port
 		chain.insert_rule(rule)
 	else:
-		print("the rule for "+sourceIP+":"+port+" exists already!")
+		print("the "+protocol+" rule for "+sourceIP+":"+port+" exists already!")
 		exit()
 
-def existsRedirectForIpAndPort(port,sourceIP):
+def existsRedirectForIpPortAndProtocol(port,sourceIP,protocol):
 	rules=matchIptablesRulesOnDPort(port)
 	for rule in rules:
-		if rule.dst==sourceIP+"/255.255.255.255":
+		if rule.dst==sourceIP+"/255.255.255.255" and rule.protocol==protocol:
 			return True
 	return False
 
-def addRedirectOfDPortToContainer(port,sourceIP,containerName):
+def addRedirectOfDPortToContainer(port,sourceIP,containerName, protocol):
 	container_ip=getContainerIP(containerName)
-	addRedirectOfDPort(port,sourceIP,container_ip)
+	addRedirectOfDPort(port,sourceIP,container_ip,protocol)
 
 def addUserToContainer(username, container_name):
 	container=lxc.Container(container_name)

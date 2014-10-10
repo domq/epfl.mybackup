@@ -15,8 +15,8 @@ chain=iptc.Chain(table, "PREROUTING")
 if len(sys.argv) <2 :
 	print ("please specify a command from :\n\tlistRulesOnDPort [port]\n"+
 						"\tdeleteRulesOnDPort [port]\n"+
-						"\taddRedirect [port sourceIP destinationIP]\n"+
-						"\taddRedirectToContainer [port sourceIP containerName]\n"+
+						"\taddRedirect [port sourceIP destinationIP protocol]\n"+
+						"\taddRedirectToContainer [port sourceIP containerName protocol]\n"+
 						"\tdeleteRulesForSourceIP [ip]\n"+
 						"\tdeleteRulesForDestIP [ip]\n"+
 						"\tcloneAndStartContainer [source_name new_name]\n"+
@@ -34,7 +34,7 @@ else:
 		else:
 			lxcproc.printIptablesRulesOnDPort(sys.argv[2])
 
-	elif sys.argv[1]=="deleteRulesOnPort":
+	elif sys.argv[1]=="deleteRulesOnDPort":
 		if len(sys.argv)!=3:
 			print("specify a port : deleteRulesOnDPort [port]")
 			exit()
@@ -56,11 +56,11 @@ else:
 			lxcproc.deleteIptablesRulesForDestIP(sys.argv[2])
 
 	elif sys.argv[1]=="addRedirect":
-		if len(sys.argv)!=5:
-			print("specify a port, source IP and destination IP : addRedirect [port sourceIP destinationIP]")
+		if len(sys.argv)!=6:
+			print("specify a port, source IP, destination IP and protocol (tcp|udp): addRedirect [port sourceIP destinationIPi protocol]")
 			exit()
 		else:
-			lxcproc.addRedirectOfDPort(sys.argv[2], sys.argv[3], sys.argv[4])
+			lxcproc.addRedirectOfDPort(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 
 	elif sys.argv[1]=="getContainerIP":
 		if len(sys.argv)!=3:
@@ -70,11 +70,11 @@ else:
 			print(lxcproc.getContainerIP(sys.argv[2]))
 
 	elif sys.argv[1]=="addRedirectToContainer":
-		if len(sys.argv)!=5:
-			print("specify a port, source IP and container name : addRedirectToContainer [port sourceIP containerName]")
+		if len(sys.argv)!=6:
+			print("specify a port, source IP, container name and the protocol (tcp|udp): addRedirectToContainer [port sourceIP containerName protocol]")
 			exit()
 		else:
-			lxcproc.addRedirectOfDPortToContainer(sys.argv[2], sys.argv[3], sys.argv[4])
+			lxcproc.addRedirectOfDPortToContainer(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 
 	elif sys.argv[1]=="deleteRedirectToContainer":
 		if len(sys.argv)!=3:
