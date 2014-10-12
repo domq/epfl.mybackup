@@ -1,7 +1,10 @@
 <!-- main index.zul -->
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<!-- <?script src="/scripts/jquery.isotope.js" type="text/javascript"?> -->
-<zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:x="xhtml" xmlns:ca="http://www.zkoss.org/2005/zk/client/attribute"> 
-<label value="Hello world spring"/>
+<zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:x="xhtml" xmlns:ca="http://www.zkoss.org/2005/zk/client/attribute">
+
+<window title="myBackup" border="normal"  apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(MainVM)" vflex="1" hflex="1">
+
+	<label value="Hello world spring"/>
+</window>
 </zk>
 
