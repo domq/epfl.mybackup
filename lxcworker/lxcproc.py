@@ -17,15 +17,16 @@ def getContainer(container_name):
 	result={}
 	container = lxc.Container(container_name)
 	if container.defined :
-		result[container_name]={}
-		result[container_name]["name"]=container_name
-		result[container_name]["state"]=container.state
+		result={}
+		result["class"]="ch.epfl.mybackup.beans.Container"  #for java deserialization
+		result["name"]=container_name
+		result["state"]=container.state
 		if container.state!="STOPPED":
-			result[container_name]["MAC"]=container.network[0].hwaddr
-			result[container_name]["IPv4"]=container.get_ips(interface="eth0", timeout=30)[0]
-			ipforwards=getDestIPForward(result[container_name]["IPv4"])
+			result["MAC"]=container.network[0].hwaddr
+			result["IPv4"]=container.get_ips(interface="eth0", timeout=30)[0]
+			ipforwards=getDestIPForward(result["IPv4"])
 			if ipforwards :
-				result[container_name]["IpForwards"]=getDestIPForward(result[container_name]["IPv4"])
+				result["IpForwards"]=getDestIPForward(result["IPv4"])
 		return result
 	else:
 		print("the container is not defined!")
@@ -35,7 +36,7 @@ def getContainers():
 	result=[]
 	for container_name in lxc.list_containers():
 		result.append(getContainer(container_name))
-	finalresult={"hostname":HOSTNAME,"hostIP":socket.gethostbyname(socket.gethostname()),"containers":result}
+	finalresult={"class":"ch.epfl.mybackup.beans.Server","hostname":HOSTNAME,"hostIP":socket.gethostbyname(socket.gethostname()),"containers":result}
 	return finalresult
 
 def getContainerIP(container_name):
@@ -88,6 +89,7 @@ def getDestIPForward(dest_ip):
 	results=[]
 	for rule in rules:
 		result={}
+		result["class"]="ch.epfl.mybackup.beans.IpForward" # java deserialization
 		result["dest"]=dest_ip
 		result["port"]=rule.matches[0].dport
 		result["source"]=rule.dst.split("/", 1 )[0];
