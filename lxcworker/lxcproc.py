@@ -5,11 +5,13 @@ import lxc
 import json
 import iptc
 import socket
+import augeas
 
 table=iptc.Table(iptc.Table.NAT)
 chain=iptc.Chain(table, "PREROUTING")
 HOSTNAME=socket.gethostname()
 CONTAINER_PATH = "/var/lib/lxc/"
+MYROOT="/"
 
 def getContainer(container_name):
 	result={}
@@ -224,6 +226,13 @@ def getRealUsersInContainer(container_name):
 			resultusers.append(user)
 	return resultusers
 
+def getDNS():
+	a = augeas.Augeas(root=MYROOT) 
+	matches = a.match("/files/etc/hosts/*/*")
+	for match in matches:
+		print(a.get(match))
+
+	
 
 
 

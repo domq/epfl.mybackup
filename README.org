@@ -1,39 +1,21 @@
 * Journal
 
-**
-
-mvn archetype:generate -DgroupId=lxc.epfl.ch -DartifactId=mybackup -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
-
-: [INFO] Scanning for projects...
-: [INFO] Searching repository for plugin with prefix: 'archetype'.
-: [INFO] ------------------------------------------------------------------------
-: [INFO] Building Maven Default Project
-: [INFO]    task-segment: [archetype:generate] (aggregator-style)
-: [INFO] ------------------------------------------------------------------------
-: [INFO] Preparing archetype:generate
-: [INFO] No goals needed for project - skipping
-: [INFO] [archetype:generate {execution: default-cli}]
-: [INFO] Generating project in Batch mode
-: [INFO] ----------------------------------------------------------------------------
-: [INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-webapp:1.0
-: [INFO] ----------------------------------------------------------------------------
-: [INFO] Parameter: groupId, Value: lxc.epfl.ch
-: [INFO] Parameter: packageName, Value: lxc.epfl.ch
-: [INFO] Parameter: package, Value: lxc.epfl.ch
-: [INFO] Parameter: artifactId, Value: mybackup
-: [INFO] Parameter: basedir, Value: /home/predrag/EPFL/mybackup/mybackup-repo/webapp
-: [INFO] Parameter: version, Value: 1.0-SNAPSHOT
-: [INFO] project created from Old (1.x) Archetype in dir: /home/predrag/EPFL/mybackup/mybackup-repo/webapp/mybackup
-: [INFO] ------------------------------------------------------------------------
-: [INFO] BUILD SUCCESSFUL
-: [INFO] ------------------------------------------------------------------------
-: [INFO] Total time: 3 seconds
-: [INFO] Finished at: Sun Oct 12 14:09:26 CEST 2014
-: [INFO] Final Memory: 24M/213M
-: [INFO] ------------------------------------------------------------------------
 
 ** <2014-10-10> Gasparized samba
+=======
+** <2014-10-10> Built python-augeas for python3
+We need this in order to manipulate /etc/hosts file and other..
 
+: wget https://github.com/hercules-team/python-augeas/archive/master.zip
+: python3 setup.py build
+: python3 setup.py install
+: yum install augeas-libs
+>>>>>>> 779620ce6cb37bd12f2b47173c7e32d65f724936
+
+
+
+
+** <2014-10-10> Gasparized samba
 
 Clone the container, start it and link the public ip samba ports to the container ip samba ports
 : [root@lxc]# ./lxctests.py cloneAndStartContainer mybackup.golden.10_10_2014 mybackup-2
