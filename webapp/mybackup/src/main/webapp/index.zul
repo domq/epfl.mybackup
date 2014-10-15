@@ -2,9 +2,33 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:x="xhtml" xmlns:ca="http://www.zkoss.org/2005/zk/client/attribute">
 
-<window title="myBackup" border="normal"  apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(MainVM)" vflex="1" hflex="1">
-
-	<label value="Hello world spring"/>
+<window  apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(MainVM)" vflex="1" hflex="1">
+<vbox vflex="1" hflex="1">
+	<hbox vflex="1" hflex="1">
+<!-- 		<textbox rows="10" cols="60" value="@load(vm.serverData)"/> -->
+		<label value="@load(vm.server.hostname)"/>
+		<label value="@load(vm.server.hostIP)"/>
+		<vbox children="@load(vm.server.containers) " vflex="1" hflex="1">
+					<template name="children" var="container">
+							<hbox vflex="1" hflex="1">
+								<label value="container:"/>
+								<label value="@load(container.name)"/>
+								(<label value="@load(container.state)"/>)
+								<vbox  children="@load(container.ipForwards)"  vflex="1" hflex="1">
+									<template name="children" var="ipforward">
+										<hbox vflex="1" hflex="1">
+											<label value="@load(ipforward.source)"/> is redirected to 
+											<label value="@load(ipforward.dest)"/> on port 
+											<label value="@load(ipforward.port)"/> for protocol
+											<label value="@load(ipforward.protocol)"/>
+										</hbox>
+									</template>
+								</vbox>
+							</hbox>
+					</template>
+		</vbox>
+	</hbox>
+</vbox>
 </window>
 </zk>
 

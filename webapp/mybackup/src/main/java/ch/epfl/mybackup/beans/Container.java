@@ -1,10 +1,11 @@
 package ch.epfl.mybackup.beans;
 
-import java.util.Map;
+import java.util.List;
+import lombok.Data;
 
+@Data
 public class Container {
 	private String name;
-	public String getName(){
-		return name;
-	}
+	private String state;
+	private List<IpForward> ipForwards;
 }

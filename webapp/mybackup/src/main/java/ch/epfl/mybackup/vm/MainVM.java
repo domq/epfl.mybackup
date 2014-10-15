@@ -1,6 +1,7 @@
-package ch.epfl.mybackup;
+package ch.epfl.mybackup.vm;
 
-import ch.epfl.mybackup.beans.*;
+import ch.epfl.mybackup.beans.Server;
+import ch.epfl.mybackup.beans.Container;
 import java.util.ArrayList;
 
 import java.io.*;
@@ -21,11 +22,15 @@ public class MainVM implements java.io.Serializable{
 
 	static Logger log = LoggerFactory.getLogger(MainVM.class.getName());
 
-	public Server getServerData() throws IOException{
+	public Server getServer() throws IOException{
+		String serverData= getServerData();
+		Server server=new flexjson.JSONDeserializer<Server>().deserialize(serverData);
+		return server;
+	}
+
+	public String getServerData()  throws IOException{
 		InputStream in = this.getClass().getClassLoader()
                                 .getResourceAsStream("serverData.json");
-		String serverData= IOUtils.toString(in,"utf-8");
-		Server server=new flexjson.JSONDeserializer<Server>().deserialize(serverData,Server.class);
-		return server;
+		return IOUtils.toString(in,"utf-8");
 	}
 }

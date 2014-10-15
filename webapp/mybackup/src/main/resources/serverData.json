@@ -1,51 +1,70 @@
 {
-   "containers": [
-       {
-           "centos-1": {
-               "name": "centos-1",
-               "state": "STOPPED"
-           }
-       },
-       {
-           "fedora-1": {
-               "name": "fedora-1",
-               "state": "STOPPED"
-           }
-       },
-       {
-           "mybackup-1": {
-               "IPv4": "192.168.58.38",
-               "IpForwards": [
-                   {
-                       "dest": "192.168.58.38",
-                       "port": "548",
-                       "source": "10.0.0.92"
-                   }
-               ],
-               "MAC": "00:16:3e:9f:a3:09",
-               "name": "mybackup-1",
-               "state": "RUNNING"
-           }
-       },
-       {
-           "mybackup.golden.24_09_2014": {
-               "name": "mybackup.golden.24_09_2014",
-               "state": "STOPPED"
-           }
-       },
-       {
-           "titi": {
-               "name": "titi",
-               "state": "STOPPED"
-           }
-       },
-       {
-           "titi2": {
-               "name": "titi2",
-               "state": "STOPPED"
-           }
-       }
-   ],
-   "hostIP": "10.0.0.92",
-   "hostname": "lxc.novalocal"
+    "class": "ch.epfl.mybackup.beans.Server",
+    "containers": [
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "centos-1",
+            "state": "STOPPED"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "fedora-1",
+            "state": "STOPPED"
+        },
+        {
+            "IPv4": "192.168.58.38",
+            "IpForwards": [
+                {
+                    "class": "ch.epfl.mybackup.beans.IpForward",
+                    "dest": "192.168.58.38",
+                    "port": "548",
+                    "protocol": "tcp",
+                    "source": "10.0.0.92"
+                }
+            ],
+            "MAC": "00:16:3e:9f:a3:09",
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "mybackup-1",
+            "state": "RUNNING"
+        },
+        {
+            "IPv4": "192.168.58.253",
+            "MAC": "00:16:3e:8e:90:ac",
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "mybackup-2",
+            "state": "RUNNING"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "mybackup-3",
+            "state": "STOPPED"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "mybackup-4",
+            "state": "STOPPED"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "mybackup.golden.10_10_2014",
+            "state": "STOPPED"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "mybackup.golden.24_09_2014",
+            "state": "STOPPED"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "titi",
+            "state": "STOPPED"
+        },
+        {
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "titi2",
+            "state": "STOPPED"
+        }
+    ],
+    "hostIP": "10.0.0.92",
+    "hostname": "lxc.novalocal"
 }
