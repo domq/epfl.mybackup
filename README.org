@@ -1,8 +1,21 @@
 * Journal
 
+** <2014-15-10> Deployable webapp
 
-** <2014-10-10> Gasparized samba
-=======
+: [root@lxc] lxc-create -nwebserver -t fedora
+: [root@lxc] lxc-start -nwebserver -d
+: [root@lxc] lxc-attach -nwebserver -- yum update
+: [root@lxc] lxc-attach -nwebserver -- yum install tomcat maven git -y
+: [root@lxc] lxc-attach -nwebserver -- systemctl start tomcat
+: [root@lxc] lxc-attach -nwebserver -- systemctl enable tomcat
+: [root@lxc] lxc-attach -nwebserver -- git clone https://git.epfl.ch/repo/lxc-python.git /root/mybackup-repo
+: [root@lxc] lxc-attach -nwebserver -- mvn package -f=/root/mybackup-repo/webapp/mybackup/pom.xml
+: [root@lxc] lxc-attach -nwebserver -- cp /root/mybackup-repo/webapp/mybackup/target/myBackup.war /usr/share/tomcat/webapps
+: [root@lxc] ./lxcworker/lxctests.py addRedirectToContainer 8080 10.0.0.92 webserver tcp
+
+Done ! You cann acces the server on the private IP (10.0.0.92) or public IP (128.178.209.165)
+
+
 ** <2014-10-10> Built python-augeas for python3
 We need this in order to manipulate /etc/hosts file and other..
 
@@ -10,10 +23,6 @@ We need this in order to manipulate /etc/hosts file and other..
 : python3 setup.py build
 : python3 setup.py install
 : yum install augeas-libs
->>>>>>> 779620ce6cb37bd12f2b47173c7e32d65f724936
-
-
-
 
 ** <2014-10-10> Gasparized samba
 
