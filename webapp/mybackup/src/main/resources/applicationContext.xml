@@ -3,10 +3,37 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:zksp="http://www.zkoss.org/2008/zkspring/core"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 									http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-									http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
+									http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd
+									http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 	<context:component-scan base-package="org.zkoss.spring.beans.zkcomponents,ch.epfl"/>
 	<zksp:zk-config/>
+	
+	<!-- where to connect -->
+	<rabbit:connection-factory id="connectionFactory" host="128.178.209.169"/>
+	<!-- can create queues -->
+	<rabbit:admin id="containerAdmin"  connection-factory="connectionFactory"/>
+	
+	<!-- auto-generated queue -->
+	<rabbit:queue id="anonymousQueue"/>
+
+	<!-- echgange with topic pattern sent to queue -->
+	<rabbit:topic-exchange  name="lxc" auto-delete="true" durable="true">
+		<rabbit:bindings>
+			<rabbit:binding queue="anonymousQueue" pattern="lxc.server" />
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+	
+	
+	<!-- amqp consumer config -->
+	<rabbit:listener-container connection-factory="connectionFactory">
+		<rabbit:listener ref="MessageService" queues="anonymousQueue"/>
+	</rabbit:listener-container>
+	
+	<!-- amqp producer config -->
+	<rabbit:template id="sender" connection-factory="connectionFactory"  exchange="lxc"/>
+
 </beans>
 

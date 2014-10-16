@@ -9,7 +9,7 @@ import lxcproc
 #lxcworker.py
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host='10.0.0.103'))
+        host='128.178.209.169'))
 channel = connection.channel()
 
 channel.exchange_declare(exchange='lxc',

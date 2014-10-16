@@ -3,17 +3,19 @@
 <zk xmlns:w="http://www.zkoss.org/2005/zk/client" xmlns:x="xhtml" xmlns:ca="http://www.zkoss.org/2005/zk/client/attribute">
 
 <window  apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(MainVM)" vflex="1" hflex="1">
+<!-- Message service: <label value="@load(vm.messageServiceConnection?'Connected':'Not connected')"/> -->
 <vbox vflex="1" hflex="1">
-	<hbox vflex="1" hflex="1">
-<!-- 		<textbox rows="10" cols="60" value="@load(vm.serverData)"/> -->
-		<label value="@load(vm.server.hostname)"/>
-		<label value="@load(vm.server.hostIP)"/>
-		<vbox children="@load(vm.server.containers) " vflex="1" hflex="1">
-					<template name="children" var="container">
-							<hbox vflex="1" hflex="1">
-								<label value="container:"/>
+		<hbox>Server name: <label value="@load(vm.server.hostname)"/></hbox>
+		<hbox>Server IP: <label value="@load(vm.server.hostIP)"/></hbox>
+		Container list:
+		<grid model="@load(vm.server.containers)">
+				<template name="model" var="container">
+						<row vflex="1" hflex="1">
+							<cell>
 								<label value="@load(container.name)"/>
 								(<label value="@load(container.state)"/>)
+							</cell>
+							<cell>
 								<vbox  children="@load(container.ipForwards)"  vflex="1" hflex="1">
 									<template name="children" var="ipforward">
 										<hbox vflex="1" hflex="1">
@@ -24,10 +26,10 @@
 										</hbox>
 									</template>
 								</vbox>
-							</hbox>
-					</template>
-		</vbox>
-	</hbox>
+							</cell>
+						</row>
+				</template>
+		</grid>
 </vbox>
 </window>
 </zk>
