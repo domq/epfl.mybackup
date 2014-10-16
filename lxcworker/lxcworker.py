@@ -5,6 +5,7 @@ import lxc
 import json
 import socket
 import lxcproc
+import threading
 
 #lxcworker.py
 
@@ -12,10 +13,9 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(
         host='128.178.209.169'))
 channel = connection.channel()
 
-channel.exchange_declare(exchange='lxc',
-                         type='topic')
+channel.exchange_declare(exchange='lxc',type='topic',durable=True,auto_delete=True)
 
-result = channel.queue_declare(exclusive=True)
+result = channel.queue_declare(durable=False, exclusive=False, auto_delete=True)
 queue_name = result.method.queue
 
 
@@ -33,6 +33,13 @@ def reply(command):
                       routing_key="lxc.master",
                       body=lxcproc.jsonify(command()))
 
+def sendState():
+	channel.basic_publish(exchange='lxc',
+                      routing_key="lxc.master",
+                      body=lxcproc.jsonify(lxcproc.getContainers()))
+	threading.Timer(5, sendState).start()
+
+
 def callbacklxc(ch, method, properties, body):
 	commands = {
 		"getcontainers" : lxcproc.getContainers,
@@ -45,9 +52,15 @@ def callbacklxc(ch, method, properties, body):
 		reply(commands[body])
 
 
+
+
+
 channel.basic_consume(callbacklxc,
                       queue=queue_name,
                       no_ack=True)
 
+sendState()
+
 channel.start_consuming()
+
 
