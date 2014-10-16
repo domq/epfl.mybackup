@@ -25,11 +25,10 @@ connection.add_timeout(timeout,callbacktimeout)
 channel = connection.channel()
 
 # create the topic on the rabbitmq server, if not already done
-channel.exchange_declare(exchange='lxc',
-                         type='topic')
+channel.exchange_declare(exchange='lxc',type='topic',durable=True,auto_delete=True)
 
 #declare the queue on the rabbitmq server, if not already done
-result = channel.queue_declare(exclusive=True)
+result = channel.queue_declare(durable=False, exclusive=False, auto_delete=True)
 queue_name = result.method.queue
 
 routing_key = sys.argv[1] if len(sys.argv) > 1 else 'anonymous.info'
