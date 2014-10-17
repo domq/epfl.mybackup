@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import java.io.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -31,11 +31,13 @@ public class MainVM implements java.io.Serializable{
 	@Autowired
 	MessageService mService;
 
-	static Logger log = LoggerFactory.getLogger(MainVM.class.getName());
+	static Logger log = Logger.getLogger(MainVM.class.getName());
 
 	public Server getServer() throws IOException{
-// 		String serverData= getServerData();
-		String serverData=mService.getServerData();
+		String serverData= getServerData();
+		log.debug("Entering getServer");
+		serverData=mService.getServerData();
+		log.debug("Server data:"+serverData);
 		if (StringUtils.isEmpty(serverData)) return null;
 		else{
 			Server server=new flexjson.JSONDeserializer<Server>().deserialize(serverData);

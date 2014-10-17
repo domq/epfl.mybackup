@@ -7,15 +7,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 
-
+import org.apache.log4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.amqp.rabbit.annotation.*;
 
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageListener;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,18 +24,19 @@ import lombok.Setter;
 
 @Component("MessageService")
 @Scope("singleton")
-public class MessageService implements MessageListener{
+public class MessageService{
 
+	static Logger log = Logger.getLogger(MessageService.class.getName());
 	
 	@Getter @Setter String serverData;
 	
 	@PostConstruct
 	public void init(){
-		  System.err.println("Mesage service intitialized");
+		  log.debug("Mesage service intitialized");
 	}
 
-	public void onMessage(Message message) {
-        System.err.println("Received <" + message.getBody() + ">");
-		serverData=new String(message.getBody());
+	@RabbitListener(queues="masterQueueWebserver", containerFactory="myListenerContainerFactory",admin="myContainerAdmin")
+	public void messageReceived(byte[] message) throws java.io.UnsupportedEncodingException{
+		serverData=new String(message,"UTF-8");
     }
 }

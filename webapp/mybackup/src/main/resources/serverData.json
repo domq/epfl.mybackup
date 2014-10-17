@@ -63,6 +63,22 @@
             "class": "ch.epfl.mybackup.beans.Container",
             "name": "titi2",
             "state": "STOPPED"
+        },
+        {
+            "IPv4": "192.168.58.191",
+            "IpForwards": [
+                {
+                    "class": "ch.epfl.mybackup.beans.IpForward",
+                    "dest": "192.168.58.191",
+                    "port": "8080",
+                    "protocol": "tcp",
+                    "source": "10.0.0.92"
+                }
+            ],
+            "MAC": "",
+            "class": "ch.epfl.mybackup.beans.Container",
+            "name": "webserver",
+            "state": "RUNNING"
         }
     ],
     "hostIP": "10.0.0.92",

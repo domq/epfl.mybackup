@@ -11,4 +11,13 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:/applicationContext.xml</param-value>
 	</context-param>
+	
+	<servlet>
+    <servlet-name>zkLoader</servlet-name>
+    <servlet-class>org.zkoss.zk.ui.http.DHtmlLayoutServlet</servlet-class>
+    <init-param>
+        <param-name>log-level</param-name>
+        <param-value>OFF</param-value>
+    </init-param>
+</servlet>
 </web-app>
