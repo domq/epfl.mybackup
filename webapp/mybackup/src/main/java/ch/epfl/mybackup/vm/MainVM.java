@@ -10,6 +10,8 @@ import java.io.*;
 
 import org.apache.log4j.Logger;
 
+import java.util.Date;
+
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,21 +30,22 @@ import org.apache.commons.io.IOUtils;
 @PropertySource("classpath:system.properties")
 public class MainVM implements java.io.Serializable{
 
-	@Autowired
-	MessageService mService;
+	@Autowired MessageService mService;
 
 	static Logger log = Logger.getLogger(MainVM.class.getName());
 
 	public Server getServer() throws IOException{
-		String serverData= getServerData();
-		log.debug("Entering getServer");
-		serverData=mService.getServerData();
-		log.debug("Server data:"+serverData);
+		String serverData=mService.getServerData();
+		log.debug(serverData);
 		if (StringUtils.isEmpty(serverData)) return null;
 		else{
 			Server server=new flexjson.JSONDeserializer<Server>().deserialize(serverData);
 			return server;
 		}
+	}
+	
+	public Date getLastUpdate(){
+		return mService.getLastUpdate();
 	}
 
 

@@ -7,5 +7,7 @@ import lombok.Data;
 public class Container {
 	private String name;
 	private String state;
+	private String MAC;
+	private String IPv4;
 	private List<IpForward> ipForwards;
 }
