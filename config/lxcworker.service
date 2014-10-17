@@ -1,0 +1,10 @@
+[Unit]
+Description=Lxcworker python daemon used to communicate with the webserver
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/root/mybackup-repo/lxcworker/lxcworker-venv/bin/python3  /root/mybackup-repo/lxcworker/lxcworker.py
+
+[Install]
+WantedBy=multi-user.target
