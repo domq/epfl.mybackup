@@ -13,8 +13,8 @@ HOSTNAME=socket.gethostname()
 CONTAINER_PATH = "/var/lib/lxc/"
 MYROOT="/"
 
+
 def getContainer(container_name):
-	result={}
 	container = lxc.Container(container_name)
 	if container.defined :
 		result={}
@@ -26,11 +26,10 @@ def getContainer(container_name):
 			result["IPv4"]=container.get_ips(interface="eth0", timeout=30)[0]
 			ipforwards=getDestIPForward(result["IPv4"])
 			if ipforwards :
-				result["IpForwards"]=getDestIPForward(result["IPv4"])
+				result["IpForwards"]=ipforwards
 		return result
 	else:
 		print("the container is not defined!")
-		exit()
 
 def getContainers():
 	result=[]
@@ -47,7 +46,6 @@ def getContainerIP(container_name):
 			return ipaddress[0]
 		else:
 			print("the container is stopped")
-			exit()
 	else:			
 		print("no container named "+container_name+" found!")
 
@@ -61,13 +59,10 @@ def existsContainer(container_name):
 def cloneAndStartContainer(source_name, new_name):
 	if not existsContainer(source_name):
 		print("container "+source_name+" doesn't exist !")
-		exit()
 	elif existsContainer(new_name):
 		print("container "+new_name+" exists already !")
-		exit()
 	elif lxc.Container(source_name).running:
 		print("the container "+source_name+" is running, stop it first (lxc-stop -n"+source_name+")")
-		exit()
 	else:
 		container_source=lxc.Container(source_name)
 		container_destination=container_source.clone(new_name)
@@ -77,6 +72,7 @@ def cloneAndStartContainer(source_name, new_name):
 
 
 def matchIptablesRulesOnDPort(dport):
+	table.refresh()
 	rules=[]
 	for rule in chain.rules:
 		for match in rule.matches:
@@ -120,6 +116,7 @@ def deleteIptablesRulesOnDPort(dport):
 	table.autocommit = True
 
 def matchIptablesRulesOnSourceIP(sourceIP):
+	table.refresh()
 	rules=[]
 	for rule in chain.rules:
 		if rule.dst.startswith(sourceIP):
@@ -127,6 +124,7 @@ def matchIptablesRulesOnSourceIP(sourceIP):
 	return rules
 
 def matchIptablesRulesOnDestIp(destIP):
+	table.refresh()
 	rules=[]
 	for rule in chain.rules:
 		if rule.target.to_destination.startswith(destIP):
@@ -171,7 +169,6 @@ def addRedirectOfDPort(port,sourceIP,destinationIP,protocol):
 		chain.insert_rule(rule)
 	else:
 		print("the "+protocol+" rule for "+sourceIP+":"+port+" exists already!")
-		exit()
 
 def existsRedirectForIpPortAndProtocol(port,sourceIP,protocol):
 	rules=matchIptablesRulesOnDPort(port)
