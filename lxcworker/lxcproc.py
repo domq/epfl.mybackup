@@ -23,10 +23,12 @@ def getContainer(container_name):
 		result["state"]=container.state
 		if container.state!="STOPPED":
 			result["MAC"]=container.network[0].hwaddr
-			result["IPv4"]=container.get_ips(interface="eth0", timeout=30)[0]
-			ipforwards=getDestIPForward(result["IPv4"])
-			if ipforwards :
-				result["IpForwards"]=ipforwards
+			ips=container.get_ips(interface="eth0", timeout=30)
+			if len(ips) > 0:
+				result["IPv4"]=ips[0]
+				ipforwards=getDestIPForward(result["IPv4"])
+				if ipforwards :
+					result["IpForwards"]=ipforwards
 		return result
 	else:
 		print("the container is not defined!")
