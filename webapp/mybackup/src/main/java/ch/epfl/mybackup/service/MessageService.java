@@ -38,7 +38,7 @@ public class MessageService{
 		  log.debug("Mesage service intitialized");
 	}
 
-	@RabbitListener(queues="masterQueueWebserver", containerFactory="myListenerContainerFactory",admin="myContainerAdmin")
+	@RabbitListener(queues="masterQueueWebserverDev", containerFactory="myListenerContainerFactory",admin="myContainerAdmin")
 	public void messageReceived(byte[] message) throws java.io.UnsupportedEncodingException{
         log.error("Received <" + message + ">");
 		serverData=new String(message,"UTF-8");

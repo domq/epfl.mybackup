@@ -24,7 +24,7 @@
 	<rabbit:admin id="myContainerAdmin"  connection-factory="connectionFactory"/>
 	
 	<!-- master queue -->
- 	<rabbit:queue id="masterQueue" name="masterQueueWebserver" exclusive="false" auto-delete="true" /> 
+ 	<rabbit:queue id="masterQueue" name="masterQueueWebserverDev" exclusive="false" auto-delete="true" /> 
 
 	<!-- exchgange with topic pattern sent to queue -->
 	<rabbit:topic-exchange  name="lxc" auto-delete="true" durable="true" >

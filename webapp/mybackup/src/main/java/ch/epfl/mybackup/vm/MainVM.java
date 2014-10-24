@@ -19,10 +19,16 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.event.*;
 
 import org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.io.IOUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Component("MainVM")
 @Scope("desktop")
@@ -33,6 +39,8 @@ public class MainVM implements java.io.Serializable{
 	@Autowired MessageService mService;
 
 	static Logger log = Logger.getLogger(MainVM.class.getName());
+
+	@Getter @Setter private Server server;
 
 	public Server getServer() throws IOException{
 		String serverData=mService.getServerData();
@@ -48,6 +56,14 @@ public class MainVM implements java.io.Serializable{
 		return mService.getLastUpdate();
 	}
 
+	@Command
+	public void updateView() throws IOException{
+	}
+
+	@Command
+	@NotifyChange({"server","lastUpdate"})
+	public void updateServers(){
+	}
 
 	public String getServerData()  throws IOException{
 		InputStream in = this.getClass().getClassLoader()

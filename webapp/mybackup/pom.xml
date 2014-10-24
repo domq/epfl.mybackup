@@ -69,6 +69,11 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.zkoss.addons</groupId>
+			<artifactId>zk-bootstrap</artifactId>
+		<version>1.0.0</version>
+		</dependency>
 			<!-- zk-spring -->
 		<dependency>
 			<groupId>org.zkoss.zk</groupId>
@@ -126,6 +131,7 @@
 			<artifactId>cglib</artifactId>
 			<version>3.1</version>
 		</dependency>
+
 		<!-- threads -->
 <!--		<dependency>
 			<groupId>org.springframework.batch</groupId>
