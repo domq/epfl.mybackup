@@ -23,7 +23,7 @@ def getContainer(container_name):
 		result["state"]=container.state
 		if container.state!="STOPPED":
 			result["MAC"]=container.network[0].hwaddr
-			ips=container.get_ips(interface="eth0", timeout=30)
+			ips=container.get_ips(interface="eth0", timeout=1)
 			if len(ips) > 0:
 				result["IPv4"]=ips[0]
 				ipforwards=getDestIPForward(result["IPv4"])
