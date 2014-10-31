@@ -50,6 +50,7 @@ public class MainVM implements java.io.Serializable{
 	static Logger log = Logger.getLogger(MainVM.class.getName());
 
 	private Server server;
+	private flexjson.JSONSerializer serializer = new flexjson.JSONSerializer();
 
 	@AfterCompose
 	public void init(@ContextParam(ContextType.VIEW) org.zkoss.zk.ui.Component view,@ContextParam(ContextType.DESKTOP) Desktop _desktop){
@@ -81,7 +82,7 @@ public class MainVM implements java.io.Serializable{
 
 	@Command
 	public void updateView() throws IOException{
-// 		getServer();
+		getServer();
 	}
 
 	@Command
@@ -90,8 +91,11 @@ public class MainVM implements java.io.Serializable{
 	}
 
 	@Command
-	public void startContainer(@BindingParam("container") Container container){
+	public void startContainer(@BindingParam("servername") String servername, @BindingParam("container") Container container){
 		log.error("container: "+container.getClass()+" starting");
+		LXCCommand command=new LXCCommand("lxc.server."+servername,LXCCommand.START_CONTAINER,container.getName());
+		String jsonCommand=serializer.exclude("class").include("parameters").serialize(command);
+		mService.sendMessage(command.getTopic(),jsonCommand);
 	}
 
 	@Command

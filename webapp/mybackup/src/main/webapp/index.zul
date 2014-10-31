@@ -9,74 +9,80 @@
 <timer id="timer" delay="3000" repeats="true" onTimer="@command('updateView')"/>
 <timer id="timer2" delay="1000" repeats="@load(empty vm.lastUpdate?'true':'false')" onTimer="@command('updateServers')"/>
 <label value="pending update..."  visible="@load(empty vm.lastUpdate)"/>
-<navbar mold="bs-tabs" visible="@load(not empty vm.lastUpdate)">
-	<navitem label="@load(vm.server.hostname)">
-		<vlayout vflex="1" hflex="1">
-			<hlayout>Last updated on <label value="@load(vm.lastUpdate, after={'updateView'})"/></hlayout>
-			<hlayout>Server name: <label value="@load(vm.server.hostname)"/></hlayout>
-			<hlayout>Server IP: <label value="@load(vm.server.hostIP)"/></hlayout>
-			<hlayout>Server state version: <label value="@load(vm.server.version, after={'updateView'})"/></hlayout>
-	<!-- 		<textbox value="@load(vm.server.containers[0], after={'updateView'})" rows="12" hflex="1"/> -->
-			Container list:
-			<listbox  id="containersListbox" model="@load(vm.containers)"  vflex="1">
-				<listhead>
-					<listheader label="Name" width="200px"/>
-					<listheader label="State" width="200px"/>
-					<listheader label="Network" width="200px"/>
-					<listheader label="Routing"/>
-				</listhead>
-					<template name="model" var="container">
-							<listitem>
-								<listcell>
-									<vlayout>
-										<label value="@load(container.name,after={'updateView'})" hflex="1"/>
-										<label value="@load(vm.containers[containerStatus.index].version,after={'updateView'})" hflex="1"/>
-									</vlayout>
-								</listcell>
-								<listcell>
-										<vbox align="center" hflex="1">
-											<label value="@load(vm.containers[containerStatus.index].state,after='updateView')"/>
-											<div class="btn-group">
-												<button class="btn-primary"  iconSclass = "z-icon-play" label="Start" if="${container.state eq 'STOPPED'}" onClick="@command('startContainer',container=container)"/>
-												<button class="btn-danger" iconSclass = "z-icon-stop" label="Stop" if="${container.state ne 'STOPPED'}" onClick="@command('stopContainer',container=container)"/>
-												<button class="btn-danger" iconSclass = "z-icon-pause" label="Freeze" if="${container.state eq 'RUNNING'}" onClick="@command('freezeContainer',container=container)"/>
-												<button class="btn-warning" iconSclass = "z-icon-play" label="Unfreeze" if="${container.state eq 'FROZEN'}" onClick="@command('unfreeze',container=container)"/>
-												<button class="btn-info" iconSclass = "z-icon-copy" label="Clone" if="${container.state eq 'STOPPED'}"/>
-											</div>
-										</vbox>
-								</listcell>
-								<listcell>
-									<vlayout visible="@load(container.state ne 'STOPPED')">
-										<label value="@load(container.IPv4)"/>
-										<label value="@load(container.MAC)"/>
-									</vlayout>
-								</listcell>
-								<listcell>
-									<grid model="@load(vm.containers[containerStatus.index].ipForwards,after='updateView')" visible="@load(not empty container.ipForwards)">
-										<template name="model" var="ipforward">
-											<row>
-												<cell>
-													<hlayout>
-														<hlayout hflex="2">
-															<label value="@load(ipforward.source)"/> is redirected to 
-															<label value="@load(ipforward.dest)"/> on port 
-															<label value="@load(ipforward.port)"/> for protocol
-															<label value="@load(ipforward.protocol)"/>
-														</hlayout>
-															<button iconSclass = "z-icon-times" class="btn-danger" label="delete"
-																	onClick="@command('deleteIpForward',ipforward=ipforward)"/>
-														</hlayout>
-												</cell>
-											</row>
-										</template>
-									</grid>
-								</listcell>
-								</listitem>
-					</template>
-			</listbox>
-		</vlayout>
-	</navitem>
+<hlayout vflex="1">
+<navbar   mold="bs-pills" visible="@load(not empty vm.lastUpdate)" orient="vertical" width="150px">
+	<navitem label="@load(not empty vm.lastUpdate?vm.server.hostname:'Waiting for server update')" selected="true"/>
 </navbar>
+		<vlayout vflex="1" hflex="1">
+			<hlayout>
+					<label class="label label-primary" value="@load(vm.lastUpdate, after={'updateView'})"/>
+					<label class="label label-info" value="@load(vm.server.hostname)"/>
+					<label class="label label-info" value="@load(vm.server.hostIP)"/>
+			</hlayout>
+<!-- 			<hlayout>Server state version: <label value="@load(vm.server.version, after={'updateView'})"/></hlayout> -->
+	<!-- 		<textbox value="@load(vm.server.containers[0], after={'updateView'})" rows="12" hflex="1"/> -->
+				<listbox  id="containersListbox" model="@load(vm.containers)"  vflex="1">
+					<listhead>
+						<listheader label="Name" width="200px"/>
+						<listheader label="State" width="200px"/>
+						<listheader label="Network" width="200px"/>
+						<listheader label="Routing"/>
+					</listhead>
+						<template name="model" var="container">
+								<listitem>
+									<listcell>
+										<vlayout>
+											<x:h2><label value="@load(container.name,after={'updateView'})" hflex="1"/></x:h2>
+											<label value="@load(vm.containers[containerStatus.index].version,after={'updateView'})" hflex="1"/>
+										</vlayout>
+									</listcell>
+									<listcell>
+											<vbox align="center" hflex="1">
+												<x:h4><label value="@load(vm.containers[containerStatus.index].state,after='updateView')"/></x:h4>
+												<div class="btn-group">
+													<button class="btn-primary"  iconSclass = "z-icon-play" label="Start" if="${container.state eq 'STOPPED'}" 
+																onClick="@command('startContainer',container=container,servername=vm.server.hostname)"/>
+													<button class="btn-danger" iconSclass = "z-icon-stop" label="Stop" if="${container.state ne 'STOPPED'}"
+																onClick="@command('stopContainer',container=container,servername=vm.server.hostname)"/>
+													<button class="btn-danger" iconSclass = "z-icon-pause" label="Freeze" if="${container.state eq 'RUNNING'}"
+																onClick="@command('freezeContainer',container=container,servername=vm.server.hostname)"/>
+													<button class="btn-warning" iconSclass = "z-icon-play" label="Unfreeze" if="${container.state eq 'FROZEN'}"
+																onClick="@command('unfreeze',container=container,servername=vm.server.hostname)"/>
+													<button class="btn-info" iconSclass = "z-icon-copy" label="Clone" if="${container.state eq 'STOPPED'}"/>
+												</div>
+											</vbox>
+									</listcell>
+									<listcell>
+										<vbox  align="center"  visible="@load(container.state ne 'STOPPED')" hflex="1">
+											<x:h3><label class="label label-info" value="@load(container.IPv4)"/></x:h3>
+											<x:h3><label  value="@load(container.MAC)"/></x:h3>
+										</vbox>
+									</listcell>
+									<listcell>
+										<grid model="@load(vm.containers[containerStatus.index].ipForwards,after='updateView')" visible="@load(not empty container.ipForwards)">
+											<template name="model" var="ipforward">
+												<row>
+													<cell>
+														<hlayout>
+															<hlayout hflex="2">
+																<label value="@load(ipforward.source)"/> is redirected to 
+																<label value="@load(ipforward.dest)"/> on port 
+																<label value="@load(ipforward.port)"/> for protocol
+																<label value="@load(ipforward.protocol)"/>
+															</hlayout>
+																<button iconSclass = "z-icon-times" class="btn-danger" label="delete"
+																		onClick="@command('deleteIpForward',ipforward=ipforward)"/>
+															</hlayout>
+													</cell>
+												</row>
+											</template>
+										</grid>
+									</listcell>
+									</listitem>
+						</template>
+				</listbox>
+		</vlayout>
+	</hlayout>
 </window>
 </zk>
 

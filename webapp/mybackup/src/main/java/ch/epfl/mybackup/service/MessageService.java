@@ -16,6 +16,7 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class MessageService{
 	
 	@Getter String serverData;
 	@Getter Date lastUpdate;
+
+	@Autowired
+	RabbitTemplate sender;
 	
 	@PostConstruct
 	public void init(){
@@ -44,4 +48,10 @@ public class MessageService{
 		serverData=new String(message,"UTF-8");
 		lastUpdate=new java.util.Date();
     }
+
+	public void sendMessage(String topic, String message){
+		sender.convertAndSend(topic, message);
+	}
+
+	
 }
