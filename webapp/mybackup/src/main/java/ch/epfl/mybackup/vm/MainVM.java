@@ -1,10 +1,10 @@
 package ch.epfl.mybackup.vm;
 
-import ch.epfl.mybackup.beans.Server;
-import ch.epfl.mybackup.beans.Container;
-import ch.epfl.mybackup.service.MessageService;
+import ch.epfl.mybackup.beans.*;
+import ch.epfl.mybackup.service.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import java.io.*;
 
@@ -19,9 +19,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zk.ui.event.*;
+import org.zkoss.zul.ListModelList;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,25 +31,47 @@ import org.apache.commons.io.IOUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+//ZK
+import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.bind.annotation.*;
+import org.zkoss.zk.ui.Desktop;
+import org.zkoss.zk.ui.event.*;
+import org.zkoss.bind.BindUtils;
+
+
+import java.util.Collections;
+
 @Component("MainVM")
 @Scope("desktop")
-@Configuration
-@PropertySource("classpath:system.properties")
 public class MainVM implements java.io.Serializable{
 
 	@Autowired MessageService mService;
 
 	static Logger log = Logger.getLogger(MainVM.class.getName());
 
-	@Getter @Setter private Server server;
+	private Server server;
+
+	@AfterCompose
+	public void init(@ContextParam(ContextType.VIEW) org.zkoss.zk.ui.Component view,@ContextParam(ContextType.DESKTOP) Desktop _desktop){
+		Selectors.wireComponents(view, this, false);
+		Selectors.wireEventListeners(view, this);
+	}
 
 	public Server getServer() throws IOException{
 		String serverData=mService.getServerData();
 		log.debug(serverData);
 		if (StringUtils.isEmpty(serverData)) return null;
 		else{
-			Server server=new flexjson.JSONDeserializer<Server>().deserialize(serverData);
+			server= new flexjson.JSONDeserializer<Server>().deserialize(serverData);
 			return server;
+		}
+	}
+
+	public List<Container> getContainers() throws IOException{
+		try{
+			return server.getContainers();
+		}catch(NullPointerException npe){
+			return null;
 		}
 	}
 	
@@ -58,6 +81,7 @@ public class MainVM implements java.io.Serializable{
 
 	@Command
 	public void updateView() throws IOException{
+// 		getServer();
 	}
 
 	@Command
@@ -65,9 +89,36 @@ public class MainVM implements java.io.Serializable{
 	public void updateServers(){
 	}
 
+	@Command
+	public void startContainer(@BindingParam("container") Container container){
+		log.error("container: "+container.getClass()+" starting");
+	}
+
+	@Command
+	public void stopContainer(@BindingParam("container") Container container){
+		log.error("container: "+container.getClass()+" stopping");
+	}
+
+	@Command
+	public void freezeContainer(@BindingParam("container") Container container){
+		log.error("container: "+container.getClass()+" freezing");
+	}
+
+	@Command
+	public void unfreezeContainer(@BindingParam("container") Container container){
+		log.error("container: "+container.getClass()+" unfreezing");
+	}
+
+	@Command
+	public void deleteIpForward(@BindingParam("ipforward") IpForward ipforward){
+		log.error("deleting ipforward:"+ipforward);
+	}
+
 	public String getServerData()  throws IOException{
 		InputStream in = this.getClass().getClassLoader()
                                 .getResourceAsStream("serverData.json");
 		return IOUtils.toString(in,"utf-8");
 	}
+
+
 }

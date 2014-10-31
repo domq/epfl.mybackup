@@ -29,7 +29,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<zk.version>7.0.3</zk.version>
+		<zk.version>7.0.4.FL.20141024</zk.version>
 		<zkspring.version>3.1.1</zkspring.version>
 		<spring.version>4.1.1.RELEASE</spring.version>
 	</properties>
@@ -38,6 +38,12 @@
 			<groupId>org.zkoss.zk</groupId>
 			<artifactId>zkplus</artifactId>
 			<version>${zk.version}</version>
+			    <exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-jdk14</artifactId>
+					</exclusion>
+				</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.zkoss.zk</groupId>
@@ -131,6 +137,12 @@
 			<artifactId>cglib</artifactId>
 			<version>3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
 
 		<!-- threads -->
 <!--		<dependency>

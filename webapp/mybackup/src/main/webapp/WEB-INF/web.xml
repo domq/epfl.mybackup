@@ -13,11 +13,11 @@
 	</context-param>
 	
 	<servlet>
-    <servlet-name>zkLoader</servlet-name>
-    <servlet-class>org.zkoss.zk.ui.http.DHtmlLayoutServlet</servlet-class>
-    <init-param>
-        <param-name>log-level</param-name>
-        <param-value>OFF</param-value>
-    </init-param>
-</servlet>
+		<servlet-name>zkLoader</servlet-name>
+		<servlet-class>org.zkoss.zk.ui.http.DHtmlLayoutServlet</servlet-class>
+		<init-param>
+			<param-name>log-level</param-name>
+			<param-value>OFF</param-value>
+		</init-param>
+	</servlet>
 </web-app>

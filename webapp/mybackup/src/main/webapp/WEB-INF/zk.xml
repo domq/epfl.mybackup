@@ -19,4 +19,8 @@
 		<name>org.zkoss.zul.Panel.mold</name>
 		<value>bs</value>
 	</library-property>
+	<library-property>
+		<name>org.zkoss.util.logging.config.file</name>
+		<value>zk-loging.properties</value>
+	</library-property>
 </zk>
