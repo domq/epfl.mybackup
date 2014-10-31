@@ -10,7 +10,7 @@ import threading
 #lxcworker.py
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host='128.178.209.169'))
+        host='10.0.0.103'))
 channel = connection.channel()
 
 channel.exchange_declare(exchange='lxc',type='topic',durable=True,auto_delete=True)
