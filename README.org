@@ -16,6 +16,9 @@
 Done ! You cann acces the server on the private IP (10.0.0.92) or public IP (128.178.209.165)
 
 
+** <2014-10-24 Fri> DNS server
+
+128.178.209.165 => quatrava.mybackup.epfl.ch
 ** <2014-10-10> Built python-augeas for python3
 We need this in order to manipulate /etc/hosts file and other..
 
@@ -372,6 +375,3 @@ fi
 
 echo "Finished! Happy backups!"
 #+END_SRC
-** <2014-10-24 Fri> DNS server
-
-128.178.209.165 => quatrava.mybackup.epfl.ch
