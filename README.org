@@ -372,3 +372,6 @@ fi
 
 echo "Finished! Happy backups!"
 #+END_SRC
+** <2014-10-24 Fri> DNS server
+
+128.178.209.165 => quatrava.mybackup.epfl.ch
